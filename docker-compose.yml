@@ -1,0 +1,11 @@
+version: '3'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: DockerFile
+    command: /bin/sh -c "go run main.go"
+    stdin_open: true # これいるか微妙
+    tty: true
+    volumes:
+      - .:/app
