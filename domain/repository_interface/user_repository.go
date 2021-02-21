@@ -5,6 +5,6 @@ import (
 )
 
 type IUserRepository interface {
-	Save(user *domain.User)
-	FindByToken(token *domain.UserToken)
+	Save(user *domain.User) error
+	FindByToken(token *domain.UserToken) (*domain.User, error)
 }
