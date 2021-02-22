@@ -70,7 +70,7 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	header := r.Header
-	stringToken := header["X-Token"] // なんで大文字になる？
+	stringToken := header["X-Token"][0] // なんで大文字になる？
 
 	ur := repository.NewUserRepository()
 	uis := service.NewUserIdService(ur)
@@ -78,8 +78,7 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 
 	uas := application.NewUserApplicationService(ur, uis, uts)
 
-	// 0と明示していいのかな
-	name, err := uas.GetName(stringToken[0])
+	name, err := uas.GetName(stringToken)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -95,4 +94,31 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("PUTだけです。"))
 		return
 	}
+
+	header := r.Header
+	stringToken := header["X-Token"][0] // なんで大文字になる？、0って明示して大丈夫？
+
+	body := r.Body
+	defer body.Close()
+
+	buf := new(bytes.Buffer)
+	io.Copy(buf, body)
+
+	var cuj createUserJson
+	json.Unmarshal(buf.Bytes(), &cuj)
+
+	name := cuj.Name
+
+	ur := repository.NewUserRepository()
+	uis := service.NewUserIdService(ur)
+	uts := service.NewUserTokenService(ur)
+
+	uas := application.NewUserApplicationService(ur, uis, uts)
+
+	err := uas.Update(name, stringToken)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	w.WriteHeader(http.StatusOK)
 }

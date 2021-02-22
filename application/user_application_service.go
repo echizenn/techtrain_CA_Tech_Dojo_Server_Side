@@ -63,7 +63,14 @@ func (uas UserApplicationService) Update(name string, token string) error {
 		return err
 	}
 
-	err = uas.userRepository.Update(user)
+	newName, err := domain.NewName(name)
+	if err != nil {
+		return err
+	}
+
+	newUser := user.SetName(*newName)
+
+	err = uas.userRepository.Update(&newUser)
 	if err != nil {
 		return err
 	}
