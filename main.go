@@ -1,37 +1,81 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
+	"bytes"
+	"encoding/json"
+	"io"
 	"log"
 	"net/http"
-	"time"
 
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/application"
+	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/service"
+	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/repository"
 )
 
 func main() {
-	//DBの接続
-	var Db *sql.DB
-	var err error
-	//<user名>:<パスワード>@/<db名>
-	Db, err = sql.Open("mysql", "root:example@/go_database")
-	if err != nil {
-		log.Fatal("DBエラー")
-	}
-
-	Db.SetConnMaxLifetime(time.Minute * 3)
-
-	fmt.Println("接続できたお( ＾ω＾)")
-
-	// 「/a」に対して処理を追加
-	http.HandleFunc("/a", handler)
+	// これは書き方よくなさそう
+	http.HandleFunc("/user/create", createUser)
+	http.HandleFunc("/user/get", getUser)
+	http.HandleFunc("/user/update", updateUser)
 
 	// 8088ポートで起動
 	http.ListenAndServe(":8088", nil)
 }
 
+type createUserJson struct {
+	Name string `json:"name"`
+}
+
 // リクエストを処理する関数
-func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Hello World from Go.")
+func createUser(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		w.WriteHeader(http.StatusMethodNotAllowed) // 405
+		// ここの処理怪しさしかない
+		w.Write([]byte("POSTだけです。"))
+		return
+	}
+
+	body := r.Body
+	defer body.Close()
+
+	buf := new(bytes.Buffer)
+	io.Copy(buf, body)
+
+	var cuj createUserJson
+	json.Unmarshal(buf.Bytes(), &cuj)
+
+	name := cuj.Name
+
+	ur := repository.NewUserRepository()
+	uis := service.NewUserIdService(ur)
+	uts := service.NewUserTokenService(ur)
+
+	uas := application.NewUserApplicationService(ur, uis, uts)
+
+	token, err := uas.Register(name)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	w.Header().Set("token", *token)
+	w.WriteHeader(http.StatusOK)
+
+}
+
+func getUser(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		w.WriteHeader(http.StatusMethodNotAllowed) // 405
+		// ここの処理怪しさしかない
+		w.Write([]byte("GETだけです。"))
+		return
+	}
+}
+
+func updateUser(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPut {
+		w.WriteHeader(http.StatusMethodNotAllowed) // 405
+		// ここの処理怪しさしかない
+		w.Write([]byte("PUTだけです。"))
+		return
+	}
 }
