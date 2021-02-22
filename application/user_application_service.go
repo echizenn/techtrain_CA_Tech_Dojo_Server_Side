@@ -37,7 +37,7 @@ func (uas UserApplicationService) Register(name string) (*string, error) {
 	return &stringUserToken, nil
 }
 
-func (uas UserApplicationService) Get(token string) (*domain.User, error) {
+func (uas UserApplicationService) GetName(token string) (*string, error) {
 	targetToken, err := domain.NewToken(token)
 	if err != nil {
 		return nil, err
@@ -47,7 +47,10 @@ func (uas UserApplicationService) Get(token string) (*domain.User, error) {
 	if err != nil {
 		return nil, err
 	}
-	return user, nil
+
+	name := user.GetName()
+	stringName := string(name)
+	return &stringName, nil
 }
 
 func (uas UserApplicationService) Update(name string, token string) error {

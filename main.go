@@ -59,7 +59,6 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("token", *token)
 	w.WriteHeader(http.StatusOK)
-
 }
 
 func getUser(w http.ResponseWriter, r *http.Request) {
@@ -69,6 +68,24 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("GETだけです。"))
 		return
 	}
+
+	header := r.Header
+	stringToken := header["X-Token"] // なんで大文字になる？
+
+	ur := repository.NewUserRepository()
+	uis := service.NewUserIdService(ur)
+	uts := service.NewUserTokenService(ur)
+
+	uas := application.NewUserApplicationService(ur, uis, uts)
+
+	// 0と明示していいのかな
+	name, err := uas.GetName(stringToken[0])
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	w.Header().Set("name", *name)
+	w.WriteHeader(http.StatusOK)
 }
 
 func updateUser(w http.ResponseWriter, r *http.Request) {
