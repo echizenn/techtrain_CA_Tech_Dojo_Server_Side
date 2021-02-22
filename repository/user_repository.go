@@ -66,3 +66,26 @@ func (ur userRepository) FindByToken(token *domain.UserToken) (*domain.User, err
 
 	return &user, nil
 }
+
+func (ur userRepository) GetMaxId() (*domain.UserId, error) {
+	//DBの接続
+	//<user名>:<パスワード>@/<db名>
+	db, err := sql.Open("mysql", "root:example@/go_database")
+	if err != nil {
+		return nil, err
+	}
+	defer db.Close()
+
+	var id int
+
+	err = db.QueryRow("SELECT MAX(id) FROM user").Scan(id)
+	if err != nil {
+		return nil, err
+	}
+	userId, err := domain.NewId(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return userId, nil
+}
