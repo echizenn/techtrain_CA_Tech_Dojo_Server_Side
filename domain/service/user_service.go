@@ -24,7 +24,7 @@ func (uts UserTokenService) Create() *domain.UserToken {
 		log.Fatal(err)
 	}
 	stringToken := u.String()
-	token, _ := domain.NewToken(stringToken)
+	token, _ := domain.NewUserToken(stringToken)
 	// トークンが衝突している場合は新しいトークン発行
 	for uts.Exists(*token) {
 		// ランダム生成
@@ -33,7 +33,7 @@ func (uts UserTokenService) Create() *domain.UserToken {
 			log.Fatal(err)
 		}
 		stringToken := u.String()
-		token, _ = domain.NewToken(stringToken)
+		token, _ = domain.NewUserToken(stringToken)
 	}
 	return token
 }
@@ -62,14 +62,14 @@ func (uis UserIdService) Create() *domain.UserId {
 
 	// 登録者いないとき(この方法でハンドリングしていいの？)
 	if err != nil {
-		newId, err = domain.NewId(1)
+		newId, err = domain.NewUserId(1)
 		if err != nil {
 			log.Fatal(err)
 		}
 		// 登録者いるとき
 	} else {
 		id := int(*maxUserId) + 1
-		newId, err = domain.NewId(id)
+		newId, err = domain.NewUserId(id)
 		if err != nil {
 			log.Fatal(err)
 		}

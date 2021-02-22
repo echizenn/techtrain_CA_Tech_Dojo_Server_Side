@@ -75,12 +75,12 @@ func (ur userRepository) FindByToken(token *domain.UserToken) (*domain.User, err
 	if err != nil {
 		return nil, err
 	}
-	userId, err := domain.NewId(id)
+	userId, err := domain.NewUserId(id)
 	if err != nil {
 		return nil, err
 	}
 
-	userName, err := domain.NewName(name)
+	userName, err := domain.NewUserName(name)
 	if err != nil {
 		return nil, err
 	}
@@ -105,7 +105,7 @@ func (ur userRepository) GetMaxId() (*domain.UserId, error) {
 		return nil, err
 	}
 
-	userId, err := domain.NewId(id)
+	userId, err := domain.NewUserId(id)
 	if err != nil {
 		return nil, err
 	}
