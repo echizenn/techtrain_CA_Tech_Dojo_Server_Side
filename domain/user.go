@@ -16,8 +16,9 @@ func (u User) GetName() UserName {
 	return u.name
 }
 
-func (u User) SetName(name UserName) {
+func (u User) SetName(name UserName) User {
 	u.name = name
+	return u
 }
 
 func (u User) GetToken() UserToken {

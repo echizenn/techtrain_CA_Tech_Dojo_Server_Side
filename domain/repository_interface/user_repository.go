@@ -5,6 +5,8 @@ import (
 )
 
 type IUserRepository interface {
-	Save(user *domain.User)
-	FindByToken(token *domain.UserToken)
+	Insert(user *domain.User) error
+	Update(user *domain.User) error
+	FindByToken(token *domain.UserToken) (*domain.User, error)
+	GetMaxId() (*domain.UserId, error)
 }
