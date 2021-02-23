@@ -59,7 +59,7 @@ func (ur userRepository) Update(user *domain.User) error {
 	return nil
 }
 
-func (ur userRepository) FindByToken(token *domain.UserToken) (*domain.User, error) {
+func (ur userRepository) FindByToken(userToken *domain.UserToken) (*domain.User, error) {
 	//DBの接続
 	//<user名>:<パスワード>@/<db名>
 	db, err := sql.Open("mysql", "root:example@/go_database")
@@ -71,10 +71,11 @@ func (ur userRepository) FindByToken(token *domain.UserToken) (*domain.User, err
 	var id int
 	var name string
 
-	err = db.QueryRow("SELECT id, name FROM users WHERE token=?", token).Scan(&id, &name)
+	err = db.QueryRow("SELECT id, name FROM users WHERE token=?", userToken).Scan(&id, &name)
 	if err != nil {
 		return nil, err
 	}
+
 	userId, err := domain.NewUserId(id)
 	if err != nil {
 		return nil, err
@@ -85,7 +86,7 @@ func (ur userRepository) FindByToken(token *domain.UserToken) (*domain.User, err
 		return nil, err
 	}
 
-	user := domain.NewUser(*userId, *userName, *token)
+	user := domain.NewUser(*userId, *userName, *userToken)
 
 	return &user, nil
 }
