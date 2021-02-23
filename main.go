@@ -18,11 +18,17 @@ func main() {
 	http.HandleFunc("/user/get", getUser)
 	http.HandleFunc("/user/update", updateUser)
 
+	http.HandleFunc("/gacha/draw", gachaDraw)
+
 	// 8088ポートで起動
 	http.ListenAndServe(":8088", nil)
 }
 
 type createUserJson struct {
+	Name string `json:"name"`
+}
+
+type updateUserJson struct {
 	Name string `json:"name"`
 }
 
@@ -96,7 +102,7 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	header := r.Header
-	stringToken := header["X-Token"][0] // なんで大文字になる？、0って明示して大丈夫？
+	token := header["X-Token"][0] // なんで大文字になる？、0って明示して大丈夫？
 
 	body := r.Body
 	defer body.Close()
@@ -104,10 +110,10 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 	buf := new(bytes.Buffer)
 	io.Copy(buf, body)
 
-	var cuj createUserJson
-	json.Unmarshal(buf.Bytes(), &cuj)
+	var uuj updateUserJson
+	json.Unmarshal(buf.Bytes(), &uuj)
 
-	name := cuj.Name
+	name := uuj.Name
 
 	ur := repository.NewUserRepository()
 	uis := service.NewUserIdService(ur)
@@ -115,10 +121,64 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 
 	uas := application.NewUserApplicationService(ur, uis, uts)
 
-	err := uas.Update(name, stringToken)
+	err := uas.Update(name, token)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	w.WriteHeader(http.StatusOK)
+}
+
+type gachaDrawJson struct {
+	Times int `json:"times"`
+}
+
+func gachaDraw(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		w.WriteHeader(http.StatusMethodNotAllowed) // 405
+		// ここの処理怪しさしかない
+		w.Write([]byte("POSTだけです。"))
+		return
+	}
+
+	header := r.Header
+	token := header["X-Token"][0] // なんで大文字になる？、0って明示して大丈夫？
+
+	body := r.Body
+	defer body.Close()
+
+	buf := new(bytes.Buffer)
+	io.Copy(buf, body)
+
+	var gdj gachaDrawJson
+	json.Unmarshal(buf.Bytes(), &gdj)
+
+	times := gdj.Times
+
+	ur := repository.NewUserRepository()
+	cr := repository.NewCharacterRepository()
+	ucr := repository.NewUsersCharactersRepository(cr)
+
+	gs := service.NewGachaService(cr)
+
+	gas := application.NewGachaApplicationService(ur, ucr, gs)
+
+	var results []application.GachaDrawResult
+
+	for i := 0; i < times; i++ {
+		gachaDrawResult, err := gas.Draw(token)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		results = append(results, *gachaDrawResult)
+	}
+
+	stringResults, err := json.Marshal(results)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	w.Header().Set("results", string(stringResults))
 	w.WriteHeader(http.StatusOK)
 }
