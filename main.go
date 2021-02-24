@@ -11,20 +11,6 @@ func main() {
 	if err := http.ListenAndServe(":8088", mux); err != nil {
 		panic(err)
 	}
-	// これは書き方よくなさそう
-	/*
-		http.HandleFunc("/user/create", handler.CreateUser)
-		http.HandleFunc("/user/get", handler.GetUser)
-		http.HandleFunc("/user/update", handler.UpdateUser)
-
-		http.HandleFunc("/gacha/draw", handler.GachaDraw)
-
-		// このURL微妙な感じがした
-		http.HandleFunc("/character/list", handler.UserHoldCharacterList)
-
-		// 8088ポートで起動
-		http.ListenAndServe(":8088", nil)
-	*/
 }
 
 type methodHandler map[string]http.Handler
