@@ -33,7 +33,7 @@ type UserId int
 type UserName string
 type UserToken string
 
-func NewId(value int) (*UserId, error) {
+func NewUserId(value int) (*UserId, error) {
 	if value < 1 {
 		return nil, errors.New("idは1以上の整数である必要があります。")
 	}
@@ -41,7 +41,7 @@ func NewId(value int) (*UserId, error) {
 	return &id, nil
 }
 
-func NewName(value string) (*UserName, error) {
+func NewUserName(value string) (*UserName, error) {
 	if len(value) < 1 {
 		return nil, errors.New(("nameは1文字以上である必要があります。"))
 	}
@@ -49,7 +49,7 @@ func NewName(value string) (*UserName, error) {
 	return &name, nil
 }
 
-func NewToken(value string) (*UserToken, error) {
+func NewUserToken(value string) (*UserToken, error) {
 	if len(value) < 1 {
 		return nil, errors.New(("tokenは1文字以上である必要があります。"))
 	}

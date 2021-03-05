@@ -1,124 +1,39 @@
 package main
 
 import (
-	"bytes"
-	"encoding/json"
-	"io"
-	"log"
 	"net/http"
 
-	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/application"
-	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/service"
-	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/repository"
+	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/handler"
 )
 
 func main() {
-	// これは書き方よくなさそう
-	http.HandleFunc("/user/create", createUser)
-	http.HandleFunc("/user/get", getUser)
-	http.HandleFunc("/user/update", updateUser)
-
-	// 8088ポートで起動
-	http.ListenAndServe(":8088", nil)
+	mux := Router()
+	if err := http.ListenAndServe(":8088", mux); err != nil {
+		panic(err)
+	}
 }
 
-type createUserJson struct {
-	Name string `json:"name"`
-}
+type methodHandler map[string]http.Handler
 
-// リクエストを処理する関数
-func createUser(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		w.WriteHeader(http.StatusMethodNotAllowed) // 405
-		// ここの処理怪しさしかない
-		w.Write([]byte("POSTだけです。"))
+func (m methodHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if h, ok := m[r.Method]; ok {
+		h.ServeHTTP(w, r)
 		return
 	}
-
-	body := r.Body
-	defer body.Close()
-
-	buf := new(bytes.Buffer)
-	io.Copy(buf, body)
-
-	var cuj createUserJson
-	json.Unmarshal(buf.Bytes(), &cuj)
-
-	name := cuj.Name
-
-	ur := repository.NewUserRepository()
-	uis := service.NewUserIdService(ur)
-	uts := service.NewUserTokenService(ur)
-
-	uas := application.NewUserApplicationService(ur, uis, uts)
-
-	token, err := uas.Register(name)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	w.Header().Set("token", *token)
-	w.WriteHeader(http.StatusOK)
+	http.Error(w, "method not allowed.", http.StatusMethodNotAllowed)
 }
 
-func getUser(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		w.WriteHeader(http.StatusMethodNotAllowed) // 405
-		// ここの処理怪しさしかない
-		w.Write([]byte("GETだけです。"))
-		return
-	}
+func Router() *http.ServeMux {
+	mux := http.NewServeMux()
+	// user
+	mux.Handle("/user/create", methodHandler{http.MethodPost: http.HandlerFunc(handler.CreateUser)})
+	mux.Handle("/user/get", methodHandler{http.MethodGet: http.HandlerFunc(handler.GetUser)})
+	mux.Handle("/user/update", methodHandler{http.MethodPut: http.HandlerFunc(handler.UpdateUser)})
 
-	header := r.Header
-	stringToken := header["X-Token"][0] // なんで大文字になる？
+	// gacha
+	mux.Handle("/gacha/draw", methodHandler{http.MethodPost: http.HandlerFunc(handler.GachaDraw)})
 
-	ur := repository.NewUserRepository()
-	uis := service.NewUserIdService(ur)
-	uts := service.NewUserTokenService(ur)
-
-	uas := application.NewUserApplicationService(ur, uis, uts)
-
-	name, err := uas.GetName(stringToken)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	w.Header().Set("name", *name)
-	w.WriteHeader(http.StatusOK)
-}
-
-func updateUser(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPut {
-		w.WriteHeader(http.StatusMethodNotAllowed) // 405
-		// ここの処理怪しさしかない
-		w.Write([]byte("PUTだけです。"))
-		return
-	}
-
-	header := r.Header
-	stringToken := header["X-Token"][0] // なんで大文字になる？、0って明示して大丈夫？
-
-	body := r.Body
-	defer body.Close()
-
-	buf := new(bytes.Buffer)
-	io.Copy(buf, body)
-
-	var cuj createUserJson
-	json.Unmarshal(buf.Bytes(), &cuj)
-
-	name := cuj.Name
-
-	ur := repository.NewUserRepository()
-	uis := service.NewUserIdService(ur)
-	uts := service.NewUserTokenService(ur)
-
-	uas := application.NewUserApplicationService(ur, uis, uts)
-
-	err := uas.Update(name, stringToken)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	w.WriteHeader(http.StatusOK)
+	// character
+	mux.Handle("/character/list", methodHandler{http.MethodGet: http.HandlerFunc(handler.UserHoldCharacterList)})
+	return mux
 }

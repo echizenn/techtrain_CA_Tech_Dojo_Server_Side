@@ -59,7 +59,7 @@ func (ur userRepository) Update(user *domain.User) error {
 	return nil
 }
 
-func (ur userRepository) FindByToken(token *domain.UserToken) (*domain.User, error) {
+func (ur userRepository) FindByToken(userToken *domain.UserToken) (*domain.User, error) {
 	//DBの接続
 	//<user名>:<パスワード>@/<db名>
 	db, err := sql.Open("mysql", "root:example@/go_database")
@@ -71,21 +71,22 @@ func (ur userRepository) FindByToken(token *domain.UserToken) (*domain.User, err
 	var id int
 	var name string
 
-	err = db.QueryRow("SELECT id, name FROM users WHERE token=?", token).Scan(&id, &name)
-	if err != nil {
-		return nil, err
-	}
-	userId, err := domain.NewId(id)
+	err = db.QueryRow("SELECT id, name FROM users WHERE token=?", userToken).Scan(&id, &name)
 	if err != nil {
 		return nil, err
 	}
 
-	userName, err := domain.NewName(name)
+	userId, err := domain.NewUserId(id)
 	if err != nil {
 		return nil, err
 	}
 
-	user := domain.NewUser(*userId, *userName, *token)
+	userName, err := domain.NewUserName(name)
+	if err != nil {
+		return nil, err
+	}
+
+	user := domain.NewUser(*userId, *userName, *userToken)
 
 	return &user, nil
 }
@@ -105,7 +106,7 @@ func (ur userRepository) GetMaxId() (*domain.UserId, error) {
 		return nil, err
 	}
 
-	userId, err := domain.NewId(id)
+	userId, err := domain.NewUserId(id)
 	if err != nil {
 		return nil, err
 	}
