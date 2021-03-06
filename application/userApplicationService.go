@@ -70,7 +70,7 @@ func (uas UserApplicationService) Update(name string, token string) error {
 
 	newUser := user.SetName(*newName)
 
-	err = uas.userRepository.Update(&newUser)
+	err = uas.userRepository.Update(newUser)
 	if err != nil {
 		return err
 	}

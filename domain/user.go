@@ -16,7 +16,7 @@ func (u *User) GetName() UserName {
 	return u.name
 }
 
-func (u User) SetName(name UserName) User {
+func (u *User) SetName(name UserName) *User {
 	u.name = name
 	return u
 }
