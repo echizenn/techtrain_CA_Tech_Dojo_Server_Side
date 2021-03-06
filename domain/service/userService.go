@@ -17,7 +17,7 @@ func NewUserTokenService(userRepository repository_interface.IUserRepository) Us
 	return UserTokenService{userRepository}
 }
 
-func (uts UserTokenService) Create() *domain.UserToken {
+func (uts *UserTokenService) Create() *domain.UserToken {
 	// ランダム生成
 	u, err := uuid.NewRandom()
 	if err != nil {
@@ -38,7 +38,7 @@ func (uts UserTokenService) Create() *domain.UserToken {
 	return token
 }
 
-func (uts UserTokenService) Exists(token domain.UserToken) bool {
+func (uts *UserTokenService) Exists(token domain.UserToken) bool {
 	_, err := uts.userRepository.FindByToken(&token)
 	if err != nil {
 		// この処理いいか微妙
@@ -55,7 +55,7 @@ func NewUserIdService(userRepository repository_interface.IUserRepository) UserI
 	return UserIdService{userRepository}
 }
 
-func (uis UserIdService) Create() *domain.UserId {
+func (uis *UserIdService) Create() *domain.UserId {
 	// 現在最大のidを取得
 	maxUserId, err := uis.userRepository.GetMaxId()
 	var newId *domain.UserId
