@@ -12,7 +12,7 @@ func (u *User) GetId() UserId {
 	return u.id
 }
 
-func (u User) GetName() UserName {
+func (u *User) GetName() UserName {
 	return u.name
 }
 
