@@ -16,7 +16,7 @@ func NewGachaService(characterRepository repository_interface.ICharacterReposito
 	return GachaService{characterRepository}
 }
 
-func (gs GachaService) Draw() *domain.Character {
+func (gs *GachaService) Draw() *domain.Character {
 	maxId, err := gs.characterRepository.GetMaxId()
 	if err != nil {
 		log.Fatal(err)
