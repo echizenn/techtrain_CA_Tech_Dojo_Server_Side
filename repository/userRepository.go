@@ -14,7 +14,7 @@ func NewUserRepository() repository_interface.IUserRepository {
 	return &userRepository{}
 }
 
-func (ur userRepository) Insert(user *domain.User) error {
+func (ur *userRepository) Insert(user *domain.User) error {
 	//DBの接続
 	//<user名>:<パスワード>@/<db名>
 	db, err := sql.Open("mysql", "root:example@/go_database")
@@ -36,7 +36,7 @@ func (ur userRepository) Insert(user *domain.User) error {
 	return nil
 }
 
-func (ur userRepository) Update(user *domain.User) error {
+func (ur *userRepository) Update(user *domain.User) error {
 	//DBの接続
 	//<user名>:<パスワード>@/<db名>
 	db, err := sql.Open("mysql", "root:example@/go_database")
@@ -59,7 +59,7 @@ func (ur userRepository) Update(user *domain.User) error {
 	return nil
 }
 
-func (ur userRepository) FindByToken(userToken *domain.UserToken) (*domain.User, error) {
+func (ur *userRepository) FindByToken(userToken *domain.UserToken) (*domain.User, error) {
 	//DBの接続
 	//<user名>:<パスワード>@/<db名>
 	db, err := sql.Open("mysql", "root:example@/go_database")
@@ -91,7 +91,7 @@ func (ur userRepository) FindByToken(userToken *domain.UserToken) (*domain.User,
 	return &user, nil
 }
 
-func (ur userRepository) GetMaxId() (*domain.UserId, error) {
+func (ur *userRepository) GetMaxId() (*domain.UserId, error) {
 	//DBの接続
 	//<user名>:<パスワード>@/<db名>
 	db, err := sql.Open("mysql", "root:example@/go_database")

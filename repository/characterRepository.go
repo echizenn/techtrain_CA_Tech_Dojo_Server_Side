@@ -14,7 +14,7 @@ func NewCharacterRepository() repository_interface.ICharacterRepository {
 	return &characterRepository{}
 }
 
-func (cr characterRepository) FindById(characterId *domain.CharacterId) (*domain.Character, error) {
+func (cr *characterRepository) FindById(characterId *domain.CharacterId) (*domain.Character, error) {
 	//DBの接続
 	//<user名>:<パスワード>@/<db名>
 	db, err := sql.Open("mysql", "root:example@/go_database")
@@ -46,7 +46,7 @@ func (cr characterRepository) FindById(characterId *domain.CharacterId) (*domain
 	return &character, nil
 }
 
-func (cr characterRepository) GetMaxId() (*domain.CharacterId, error) {
+func (cr *characterRepository) GetMaxId() (*domain.CharacterId, error) {
 	//DBの接続
 	//<user名>:<パスワード>@/<db名>
 	db, err := sql.Open("mysql", "root:example@/go_database")

@@ -16,7 +16,7 @@ func NewUsersCharactersRepository(cr repository_interface.ICharacterRepository) 
 	return &usersCharactersRepository{cr}
 }
 
-func (ucr usersCharactersRepository) Insert(user *domain.User, character *domain.Character) error {
+func (ucr *usersCharactersRepository) Insert(user *domain.User, character *domain.Character) error {
 	//DBの接続
 	//<user名>:<パスワード>@/<db名>
 	db, err := sql.Open("mysql", "root:example@/go_database")
@@ -38,7 +38,7 @@ func (ucr usersCharactersRepository) Insert(user *domain.User, character *domain
 	return nil
 }
 
-func (ucr usersCharactersRepository) FindByUser(user *domain.User) (*[]*domain.Character, error) {
+func (ucr *usersCharactersRepository) FindByUser(user *domain.User) (*[]*domain.Character, error) {
 	//DBの接続
 	//<user名>:<パスワード>@/<db名>
 	db, err := sql.Open("mysql", "root:example@/go_database")
