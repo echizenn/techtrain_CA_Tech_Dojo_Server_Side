@@ -26,7 +26,7 @@ type GachaDrawResult struct {
 	Name        string `json:"name"`
 }
 
-func (gas GachaApplicationService) Draw(token string) (*GachaDrawResult, error) {
+func (gas *GachaApplicationService) Draw(token string) (*GachaDrawResult, error) {
 	targetToken, err := domain.NewUserToken(token)
 	if err != nil {
 		return nil, err

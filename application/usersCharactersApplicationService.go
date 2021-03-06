@@ -25,7 +25,7 @@ type UserHoldCharacter struct {
 }
 type UserHoldCharacters []UserHoldCharacter
 
-func (hcas UsersCharactersApplicationService) Hold(token string) (*UserHoldCharacters, error) {
+func (hcas *UsersCharactersApplicationService) Hold(token string) (*UserHoldCharacters, error) {
 	targetToken, err := domain.NewUserToken(token)
 	if err != nil {
 		return nil, err

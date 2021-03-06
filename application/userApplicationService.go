@@ -18,7 +18,7 @@ func NewUserApplicationService(userRepository repository_interface.IUserReposito
 	return UserApplicationService{userRepository, userIdService, userTokenService}
 }
 
-func (uas UserApplicationService) Register(name string) (*string, error) {
+func (uas *UserApplicationService) Register(name string) (*string, error) {
 	userId := uas.userIdService.Create()
 
 	userName, err := domain.NewUserName(name)
@@ -37,7 +37,7 @@ func (uas UserApplicationService) Register(name string) (*string, error) {
 	return &stringUserToken, nil
 }
 
-func (uas UserApplicationService) GetName(token string) (*string, error) {
+func (uas *UserApplicationService) GetName(token string) (*string, error) {
 	targetToken, err := domain.NewUserToken(token)
 	if err != nil {
 		return nil, err
@@ -53,7 +53,7 @@ func (uas UserApplicationService) GetName(token string) (*string, error) {
 	return &stringName, nil
 }
 
-func (uas UserApplicationService) Update(name string, token string) error {
+func (uas *UserApplicationService) Update(name string, token string) error {
 	userToken, err := domain.NewUserToken(token)
 	if err != nil {
 		return err
