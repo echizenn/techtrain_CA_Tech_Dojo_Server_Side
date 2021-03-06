@@ -16,7 +16,7 @@ func (c *Character) GetName() CharacterName {
 	return c.name
 }
 
-func (c Character) GetRarity() CharacterRarity {
+func (c *Character) GetRarity() CharacterRarity {
 	return c.rarity
 }
 
