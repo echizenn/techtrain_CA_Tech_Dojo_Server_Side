@@ -12,7 +12,7 @@ func (c *Character) GetId() CharacterId {
 	return c.id
 }
 
-func (c Character) GetName() CharacterName {
+func (c *Character) GetName() CharacterName {
 	return c.name
 }
 
