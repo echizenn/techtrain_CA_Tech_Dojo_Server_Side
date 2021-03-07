@@ -4,19 +4,19 @@ import (
 	"strconv"
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain"
-	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/repository_interface"
+	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/repository"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/service"
 )
 
 type GachaApplicationService struct {
-	userRepository            repository_interface.IUserRepository
-	usersCharactersRepository repository_interface.IUsersCharactersRepository
+	userRepository            repository.IUserRepository
+	usersCharactersRepository repository.IUsersCharactersRepository
 	gachaService              service.GachaService
 }
 
 func NewGachaApplicationService(
-	userRepository repository_interface.IUserRepository,
-	usersCharactersRepository repository_interface.IUsersCharactersRepository,
+	userRepository repository.IUserRepository,
+	usersCharactersRepository repository.IUsersCharactersRepository,
 	gachaService service.GachaService) GachaApplicationService {
 	return GachaApplicationService{userRepository, usersCharactersRepository, gachaService}
 }

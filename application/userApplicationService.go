@@ -2,17 +2,17 @@ package application
 
 import (
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain"
-	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/repository_interface"
+	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/repository"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/service"
 )
 
 type UserApplicationService struct {
-	userRepository   repository_interface.IUserRepository
+	userRepository   repository.IUserRepository
 	userIdService    service.UserIdService
 	userTokenService service.UserTokenService
 }
 
-func NewUserApplicationService(userRepository repository_interface.IUserRepository,
+func NewUserApplicationService(userRepository repository.IUserRepository,
 	userIdService service.UserIdService,
 	userTokenService service.UserTokenService) UserApplicationService {
 	return UserApplicationService{userRepository, userIdService, userTokenService}

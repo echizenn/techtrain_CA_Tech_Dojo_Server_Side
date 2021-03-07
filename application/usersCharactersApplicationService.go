@@ -4,17 +4,17 @@ import (
 	"strconv"
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain"
-	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/repository_interface"
+	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/repository"
 )
 
 type UsersCharactersApplicationService struct {
-	userRepository            repository_interface.IUserRepository
-	usersCharactersRepository repository_interface.IUsersCharactersRepository
+	userRepository            repository.IUserRepository
+	usersCharactersRepository repository.IUsersCharactersRepository
 }
 
 func NewUsersCharactersApplicationService(
-	userRepository repository_interface.IUserRepository,
-	usersCharactersRepository repository_interface.IUsersCharactersRepository) UsersCharactersApplicationService {
+	userRepository repository.IUserRepository,
+	usersCharactersRepository repository.IUsersCharactersRepository) UsersCharactersApplicationService {
 	return UsersCharactersApplicationService{userRepository, usersCharactersRepository}
 }
 

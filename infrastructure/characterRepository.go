@@ -4,13 +4,13 @@ import (
 	"database/sql"
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain"
-	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/repository_interface"
+	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/repository"
 	_ "github.com/go-sql-driver/mysql"
 )
 
 type characterRepository struct{}
 
-func NewCharacterRepository() repository_interface.ICharacterRepository {
+func NewCharacterRepository() repository.ICharacterRepository {
 	return &characterRepository{}
 }
 
