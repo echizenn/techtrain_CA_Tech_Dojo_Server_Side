@@ -9,7 +9,7 @@ import (
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/application"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/service"
-	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/repository"
+	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/infrastructure"
 )
 
 type gachaDrawJson struct {
@@ -38,9 +38,9 @@ func GachaDraw(w http.ResponseWriter, r *http.Request) {
 
 	times := gdj.Times
 
-	ur := repository.NewUserRepository()
-	cr := repository.NewCharacterRepository()
-	ucr := repository.NewUsersCharactersRepository(cr)
+	ur := infrastructure.NewUserRepository()
+	cr := infrastructure.NewCharacterRepository()
+	ucr := infrastructure.NewUsersCharactersRepository(cr)
 
 	gs := service.NewGachaService(cr)
 

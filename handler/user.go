@@ -9,7 +9,7 @@ import (
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/application"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/service"
-	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/repository"
+	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/infrastructure"
 )
 
 type createUserJson struct {
@@ -35,7 +35,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	name := cuj.Name
 
-	ur := repository.NewUserRepository()
+	ur := infrastructure.NewUserRepository()
 	uis := service.NewUserIdService(ur)
 	uts := service.NewUserTokenService(ur)
 
@@ -61,7 +61,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	header := r.Header
 	stringToken := header["X-Token"][0] // なんで大文字になる？
 
-	ur := repository.NewUserRepository()
+	ur := infrastructure.NewUserRepository()
 	uis := service.NewUserIdService(ur)
 	uts := service.NewUserTokenService(ur)
 
@@ -102,7 +102,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	name := uuj.Name
 
-	ur := repository.NewUserRepository()
+	ur := infrastructure.NewUserRepository()
 	uis := service.NewUserIdService(ur)
 	uts := service.NewUserTokenService(ur)
 
