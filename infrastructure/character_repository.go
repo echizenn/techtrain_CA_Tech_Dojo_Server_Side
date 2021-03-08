@@ -1,8 +1,7 @@
 package infrastructure
 
 import (
-	"database/sql"
-
+	connectMysql "github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/db/mysql"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/repository"
 	_ "github.com/go-sql-driver/mysql"
@@ -15,18 +14,13 @@ func NewCharacterRepository() repository.ICharacterRepository {
 }
 
 func (cr *characterRepository) FindById(characterId *domain.CharacterId) (*domain.Character, error) {
-	//DBの接続
-	//<user名>:<パスワード>@/<db名>
-	db, err := sql.Open("mysql", "root:example@/go_database")
-	if err != nil {
-		return nil, err
-	}
+	db := connectMysql.CreateSQLInstance()
 	defer db.Close()
 
 	var rarity int
 	var name string
 
-	err = db.QueryRow("SELECT name, rarity FROM characters WHERE id=?", characterId).Scan(&name, &rarity)
+	err := db.QueryRow("SELECT name, rarity FROM characters WHERE id=?", characterId).Scan(&name, &rarity)
 	if err != nil {
 		return nil, err
 	}
@@ -47,16 +41,11 @@ func (cr *characterRepository) FindById(characterId *domain.CharacterId) (*domai
 }
 
 func (cr *characterRepository) GetMaxId() (*domain.CharacterId, error) {
-	//DBの接続
-	//<user名>:<パスワード>@/<db名>
-	db, err := sql.Open("mysql", "root:example@/go_database")
-	if err != nil {
-		return nil, err
-	}
+	db := connectMysql.CreateSQLInstance()
 	defer db.Close()
 
 	var id int
-	err = db.QueryRow("SELECT MAX(id) FROM characters").Scan(&id)
+	err := db.QueryRow("SELECT MAX(id) FROM characters").Scan(&id)
 	if err != nil {
 		return nil, err
 	}

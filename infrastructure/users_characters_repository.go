@@ -1,8 +1,7 @@
 package infrastructure
 
 import (
-	"database/sql"
-
+	connectMysql "github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/db/mysql"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/repository"
 	_ "github.com/go-sql-driver/mysql"
@@ -17,12 +16,7 @@ func NewUsersCharactersRepository(cr repository.ICharacterRepository) repository
 }
 
 func (ucr *usersCharactersRepository) Insert(user *domain.User, character *domain.Character) error {
-	//DBの接続
-	//<user名>:<パスワード>@/<db名>
-	db, err := sql.Open("mysql", "root:example@/go_database")
-	if err != nil {
-		return err
-	}
+	db := connectMysql.CreateSQLInstance()
 	defer db.Close()
 
 	rows, err := db.Prepare("INSERT INTO users_characters (user_id, character_id) VALUES (?, ?)")
@@ -39,12 +33,7 @@ func (ucr *usersCharactersRepository) Insert(user *domain.User, character *domai
 }
 
 func (ucr *usersCharactersRepository) FindByUser(user *domain.User) (*[]*domain.Character, error) {
-	//DBの接続
-	//<user名>:<パスワード>@/<db名>
-	db, err := sql.Open("mysql", "root:example@/go_database")
-	if err != nil {
-		return nil, err
-	}
+	db := connectMysql.CreateSQLInstance()
 	defer db.Close()
 
 	userId := user.GetId()

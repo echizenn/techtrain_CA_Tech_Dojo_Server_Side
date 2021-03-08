@@ -1,8 +1,7 @@
 package infrastructure
 
 import (
-	"database/sql"
-
+	connectMysql "github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/db/mysql"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/repository"
 	_ "github.com/go-sql-driver/mysql"
@@ -15,12 +14,7 @@ func NewUserRepository() repository.IUserRepository {
 }
 
 func (ur *userRepository) Insert(user *domain.User) error {
-	//DBの接続
-	//<user名>:<パスワード>@/<db名>
-	db, err := sql.Open("mysql", "root:example@/go_database")
-	if err != nil {
-		return err
-	}
+	db := connectMysql.CreateSQLInstance()
 	defer db.Close()
 
 	rows, err := db.Prepare("INSERT INTO users VALUES (?, ?, ?)")
@@ -37,12 +31,7 @@ func (ur *userRepository) Insert(user *domain.User) error {
 }
 
 func (ur *userRepository) Update(user *domain.User) error {
-	//DBの接続
-	//<user名>:<パスワード>@/<db名>
-	db, err := sql.Open("mysql", "root:example@/go_database")
-	if err != nil {
-		return err
-	}
+	db := connectMysql.CreateSQLInstance()
 	defer db.Close()
 
 	rows, err := db.Prepare("UPDATE users SET name=? WHERE id=? AND token=?")
@@ -60,18 +49,13 @@ func (ur *userRepository) Update(user *domain.User) error {
 }
 
 func (ur *userRepository) FindByToken(userToken *domain.UserToken) (*domain.User, error) {
-	//DBの接続
-	//<user名>:<パスワード>@/<db名>
-	db, err := sql.Open("mysql", "root:example@/go_database")
-	if err != nil {
-		return nil, err
-	}
+	db := connectMysql.CreateSQLInstance()
 	defer db.Close()
 
 	var id int
 	var name string
 
-	err = db.QueryRow("SELECT id, name FROM users WHERE token=?", userToken).Scan(&id, &name)
+	err := db.QueryRow("SELECT id, name FROM users WHERE token=?", userToken).Scan(&id, &name)
 	if err != nil {
 		return nil, err
 	}
@@ -92,16 +76,11 @@ func (ur *userRepository) FindByToken(userToken *domain.UserToken) (*domain.User
 }
 
 func (ur *userRepository) GetMaxId() (*domain.UserId, error) {
-	//DBの接続
-	//<user名>:<パスワード>@/<db名>
-	db, err := sql.Open("mysql", "root:example@/go_database")
-	if err != nil {
-		return nil, err
-	}
+	db := connectMysql.CreateSQLInstance()
 	defer db.Close()
 
 	var id int
-	err = db.QueryRow("SELECT MAX(id) FROM users").Scan(&id)
+	err := db.QueryRow("SELECT MAX(id) FROM users").Scan(&id)
 	if err != nil {
 		return nil, err
 	}
