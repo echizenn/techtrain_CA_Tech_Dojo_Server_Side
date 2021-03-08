@@ -4,7 +4,6 @@ import (
 	connectMysql "github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/db/mysql"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/repository"
-	_ "github.com/go-sql-driver/mysql"
 )
 
 type userRepository struct{}
