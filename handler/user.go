@@ -56,7 +56,6 @@ func (api *GameAPI) CreateUser(w http.ResponseWriter, r *http.Request) {
 func (api *GameAPI) GetUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		w.WriteHeader(http.StatusMethodNotAllowed) // 405
-		// ここの処理怪しさしかない
 		w.Write([]byte("GETだけです。"))
 		return
 	}
@@ -89,7 +88,6 @@ type updateUserJson struct {
 func (api *GameAPI) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPut {
 		w.WriteHeader(http.StatusMethodNotAllowed) // 405
-		// ここの処理怪しさしかない
 		w.Write([]byte("PUTだけです。"))
 		return
 	}

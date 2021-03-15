@@ -22,7 +22,6 @@ func (api *GameAPI) UserHoldCharacterList(w http.ResponseWriter, r *http.Request
 	token := header["X-Token"][0] // なんで大文字になる？、0って明示して大丈夫？
 
 	// dbインスタンス作成
-
 	db := mysql.CreateSQLInstance()
 	defer db.Close()
 
