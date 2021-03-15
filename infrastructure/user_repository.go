@@ -17,9 +17,6 @@ func NewUserRepository(db *sql.DB) repository.IUserRepository {
 }
 
 func (ur *userRepository) Insert(user *domain.User) error {
-	//db := connectMysql.CreateSQLInstance()
-	//defer db.Close()
-
 	rows, err := ur.db.Prepare("INSERT INTO users VALUES (?, ?, ?)")
 	if err != nil {
 		return err
@@ -34,9 +31,6 @@ func (ur *userRepository) Insert(user *domain.User) error {
 }
 
 func (ur *userRepository) Update(user *domain.User) error {
-	//db := connectMysql.CreateSQLInstance()
-	//defer db.Close()
-
 	rows, err := ur.db.Prepare("UPDATE users SET name=? WHERE id=? AND token=?")
 	if err != nil {
 		return err
@@ -52,9 +46,6 @@ func (ur *userRepository) Update(user *domain.User) error {
 }
 
 func (ur *userRepository) FindByToken(userToken *domain.UserToken) (*domain.User, error) {
-	//db := connectMysql.CreateSQLInstance()
-	//defer db.Close()
-
 	var id int
 	var name string
 
@@ -79,9 +70,6 @@ func (ur *userRepository) FindByToken(userToken *domain.UserToken) (*domain.User
 }
 
 func (ur *userRepository) GetMaxId() (*domain.UserId, error) {
-	//db := connectMysql.CreateSQLInstance()
-	//defer db.Close()
-
 	var id int
 	err := ur.db.QueryRow("SELECT MAX(id) FROM users").Scan(&id)
 	if err != nil {
