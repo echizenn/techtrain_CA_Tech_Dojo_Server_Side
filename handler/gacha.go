@@ -44,7 +44,7 @@ func GachaDraw(w http.ResponseWriter, r *http.Request) {
 
 	ur := infrastructure.NewUserRepository(db)
 	cr := infrastructure.NewCharacterRepository(db)
-	ucr := infrastructure.NewUsersCharactersRepository(cr)
+	ucr := infrastructure.NewUsersCharactersRepository(cr, db)
 
 	gs := service.NewGachaService(cr)
 

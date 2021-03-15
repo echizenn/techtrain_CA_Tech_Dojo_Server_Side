@@ -29,7 +29,7 @@ func UserHoldCharacterList(w http.ResponseWriter, r *http.Request) {
 
 	ur := infrastructure.NewUserRepository(db)
 	cr := infrastructure.NewCharacterRepository(db)
-	ucr := infrastructure.NewUsersCharactersRepository(cr)
+	ucr := infrastructure.NewUsersCharactersRepository(cr, db)
 
 	ucas := application.NewUsersCharactersApplicationService(ur, ucr)
 
