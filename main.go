@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"net/http"
 
+	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/api"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/db/mysql"
-	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/handler"
 )
 
 func main() {
@@ -30,7 +30,7 @@ func (m methodHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func Router(db *sql.DB) *http.ServeMux {
-	gameAPI := handler.NewGameAPI(db)
+	gameAPI := api.NewGameAPI(db)
 
 	mux := http.NewServeMux()
 	// user
