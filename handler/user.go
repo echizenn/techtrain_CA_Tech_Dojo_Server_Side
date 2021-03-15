@@ -17,10 +17,9 @@ type createUserJson struct {
 	Name string `json:"name"`
 }
 
-func CreateUser(w http.ResponseWriter, r *http.Request) {
+func (api *GameAPI) CreateUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusMethodNotAllowed) // 405
-		// ここの処理怪しさしかない
 		w.Write([]byte("POSTだけです。"))
 		return
 	}
@@ -54,7 +53,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func GetUser(w http.ResponseWriter, r *http.Request) {
+func (api *GameAPI) GetUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		w.WriteHeader(http.StatusMethodNotAllowed) // 405
 		// ここの処理怪しさしかない
@@ -87,7 +86,7 @@ type updateUserJson struct {
 	Name string `json:"name"`
 }
 
-func UpdateUser(w http.ResponseWriter, r *http.Request) {
+func (api *GameAPI) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPut {
 		w.WriteHeader(http.StatusMethodNotAllowed) // 405
 		// ここの処理怪しさしかない

@@ -24,16 +24,18 @@ func (m methodHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func Router() *http.ServeMux {
+	gameAPI := handler.NewGameAPI()
+
 	mux := http.NewServeMux()
 	// user
-	mux.Handle("/user/create", methodHandler{http.MethodPost: http.HandlerFunc(handler.CreateUser)})
-	mux.Handle("/user/get", methodHandler{http.MethodGet: http.HandlerFunc(handler.GetUser)})
-	mux.Handle("/user/update", methodHandler{http.MethodPut: http.HandlerFunc(handler.UpdateUser)})
+	mux.Handle("/user/create", methodHandler{http.MethodPost: http.HandlerFunc(gameAPI.CreateUser)})
+	mux.Handle("/user/get", methodHandler{http.MethodGet: http.HandlerFunc(gameAPI.GetUser)})
+	mux.Handle("/user/update", methodHandler{http.MethodPut: http.HandlerFunc(gameAPI.UpdateUser)})
 
 	// gacha
-	mux.Handle("/gacha/draw", methodHandler{http.MethodPost: http.HandlerFunc(handler.GachaDraw)})
+	mux.Handle("/gacha/draw", methodHandler{http.MethodPost: http.HandlerFunc(gameAPI.GachaDraw)})
 
 	// character
-	mux.Handle("/character/list", methodHandler{http.MethodGet: http.HandlerFunc(handler.UserHoldCharacterList)})
+	mux.Handle("/character/list", methodHandler{http.MethodGet: http.HandlerFunc(gameAPI.UserHoldCharacterList)})
 	return mux
 }

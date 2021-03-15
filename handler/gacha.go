@@ -17,7 +17,7 @@ type gachaDrawJson struct {
 	Times int `json:"times"`
 }
 
-func GachaDraw(w http.ResponseWriter, r *http.Request) {
+func (api *GameAPI) GachaDraw(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusMethodNotAllowed) // 405
 		// ここの処理怪しさしかない
