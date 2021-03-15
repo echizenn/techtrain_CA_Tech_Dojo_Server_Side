@@ -6,5 +6,5 @@ import (
 
 type IUsersCharactersRepository interface {
 	Insert(user *domain.User, character *domain.Character) error
-	FindByUser(user *domain.User) (*[]*domain.Character, error)
+	FindByUser(user *domain.User) (*[]*domain.Character, *[]*int, error)
 }

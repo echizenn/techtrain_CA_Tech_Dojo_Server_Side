@@ -31,32 +31,37 @@ func (ucr *usersCharactersRepository) Insert(user *domain.User, character *domai
 	return nil
 }
 
-func (ucr *usersCharactersRepository) FindByUser(user *domain.User) (*[]*domain.Character, error) {
+func (ucr *usersCharactersRepository) FindByUser(user *domain.User) (*[]*domain.Character, *[]*int, error) {
 	userId := user.GetId()
 
 	var intCharacterId int
 	var characters []*domain.Character
 
-	rows, err := ucr.db.Query("SELECT character_id FROM users_characters WHERE user_id=?", userId)
+	var intId int
+	var ids []*int
+
+	rows, err := ucr.db.Query("SELECT id, character_id FROM users_characters WHERE user_id=?", userId)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&intCharacterId)
+		err = rows.Scan(&intId, &intCharacterId)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 		characterId, err := domain.NewCharacterId(intCharacterId)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 		character, err := ucr.cr.FindById(characterId)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
+		id := int(intId)
 		characters = append(characters, character)
+		ids = append(ids, &id)
 	}
 
-	return &characters, nil
+	return &characters, &ids, nil
 }
