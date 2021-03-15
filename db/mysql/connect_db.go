@@ -12,9 +12,10 @@ import (
 func CreateSQLInstance() *sql.DB {
 	dbuser := constants.MysqlDefaultUser
 	dbpassword := constants.MysqlDefaultPassword
+	protocal := "tcp(db:3306)"
 	dbname := constants.MysqlDefaultName
 
-	dataSource := fmt.Sprintf("%s:%s@/%s", dbuser, dbpassword, dbname)
+	dataSource := fmt.Sprintf("%s:%s@%s/%s", dbuser, dbpassword, protocal, dbname)
 
 	db, err := sql.Open("mysql", dataSource)
 	if err != nil {
