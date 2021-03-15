@@ -6,10 +6,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-
-	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/application"
-	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/service"
-	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/infrastructure"
 )
 
 type createUserJson struct {
@@ -34,13 +30,7 @@ func (api *GameAPI) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	name := cuj.Name
 
-	ur := infrastructure.NewUserRepository(api.db)
-	uis := service.NewUserIdService(ur)
-	uts := service.NewUserTokenService(ur)
-
-	uas := application.NewUserApplicationService(ur, uis, uts)
-
-	token, err := uas.Register(name)
+	token, err := api.uas.Register(name)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -59,13 +49,7 @@ func (api *GameAPI) GetUser(w http.ResponseWriter, r *http.Request) {
 	header := r.Header
 	stringToken := header["X-Token"][0] // なんで大文字になる？
 
-	ur := infrastructure.NewUserRepository(api.db)
-	uis := service.NewUserIdService(ur)
-	uts := service.NewUserTokenService(ur)
-
-	uas := application.NewUserApplicationService(ur, uis, uts)
-
-	name, err := uas.GetName(stringToken)
+	name, err := api.uas.GetName(stringToken)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -99,13 +83,7 @@ func (api *GameAPI) UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	name := uuj.Name
 
-	ur := infrastructure.NewUserRepository(api.db)
-	uis := service.NewUserIdService(ur)
-	uts := service.NewUserTokenService(ur)
-
-	uas := application.NewUserApplicationService(ur, uis, uts)
-
-	err := uas.Update(name, token)
+	err := api.uas.Update(name, token)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -1,15 +1,19 @@
 package api
 
 import (
-	"database/sql"
-
+	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/application"
 	_ "github.com/go-sql-driver/mysql"
 )
 
 type GameAPI struct {
-	db *sql.DB
+	uas  application.UserApplicationService
+	gas  application.GachaApplicationService
+	ucas application.UsersCharactersApplicationService
 }
 
-func NewGameAPI(db *sql.DB) GameAPI {
-	return GameAPI{db}
+func NewGameAPI(uas application.UserApplicationService,
+	gas application.GachaApplicationService,
+	ucas application.UsersCharactersApplicationService,
+) GameAPI {
+	return GameAPI{uas, gas, ucas}
 }

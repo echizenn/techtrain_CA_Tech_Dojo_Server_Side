@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/api"
+	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/api/wire"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/db/mysql"
 )
 
@@ -12,7 +13,7 @@ func main() {
 	db := mysql.CreateSQLInstance()
 	defer db.Close()
 
-	gameAPI := api.NewGameAPI(db)
+	gameAPI := wire.InitGameAPI(db)
 
 	mux := Router(gameAPI)
 	if err := http.ListenAndServe(":8088", mux); err != nil {
