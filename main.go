@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"net/http"
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/api"
@@ -13,7 +12,9 @@ func main() {
 	db := mysql.CreateSQLInstance()
 	defer db.Close()
 
-	mux := Router(db)
+	gameAPI := api.NewGameAPI(db)
+
+	mux := Router(gameAPI)
 	if err := http.ListenAndServe(":8088", mux); err != nil {
 		panic(err)
 	}
@@ -29,9 +30,7 @@ func (m methodHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "method not allowed.", http.StatusMethodNotAllowed)
 }
 
-func Router(db *sql.DB) *http.ServeMux {
-	gameAPI := api.NewGameAPI(db)
-
+func Router(gameAPI api.GameAPI) *http.ServeMux {
 	mux := http.NewServeMux()
 	// user
 	mux.Handle("/user/create", methodHandler{http.MethodPost: http.HandlerFunc(gameAPI.CreateUser)})
