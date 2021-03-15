@@ -1,25 +1,29 @@
 package infrastructure
 
 import (
-	connectMysql "github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/db/mysql"
+	"database/sql"
+
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/repository"
+	_ "github.com/go-sql-driver/mysql"
 )
 
-type characterRepository struct{}
+type characterRepository struct {
+	db *sql.DB
+}
 
-func NewCharacterRepository() repository.ICharacterRepository {
-	return &characterRepository{}
+func NewCharacterRepository(db *sql.DB) repository.ICharacterRepository {
+	return &characterRepository{db}
 }
 
 func (cr *characterRepository) FindById(characterId *domain.CharacterId) (*domain.Character, error) {
-	db := connectMysql.CreateSQLInstance()
-	defer db.Close()
+	//db := connectMysql.CreateSQLInstance()
+	//defer db.Close()
 
 	var rarity int
 	var name string
 
-	err := db.QueryRow("SELECT name, rarity FROM characters WHERE id=?", characterId).Scan(&name, &rarity)
+	err := cr.db.QueryRow("SELECT name, rarity FROM characters WHERE id=?", characterId).Scan(&name, &rarity)
 	if err != nil {
 		return nil, err
 	}
@@ -40,11 +44,11 @@ func (cr *characterRepository) FindById(characterId *domain.CharacterId) (*domai
 }
 
 func (cr *characterRepository) GetMaxId() (*domain.CharacterId, error) {
-	db := connectMysql.CreateSQLInstance()
-	defer db.Close()
+	//db := connectMysql.CreateSQLInstance()
+	//defer db.Close()
 
 	var id int
-	err := db.QueryRow("SELECT MAX(id) FROM characters").Scan(&id)
+	err := cr.db.QueryRow("SELECT MAX(id) FROM characters").Scan(&id)
 	if err != nil {
 		return nil, err
 	}
