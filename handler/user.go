@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/application"
+	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/db/mysql"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/service"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/infrastructure"
 )
@@ -35,7 +36,10 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	name := cuj.Name
 
-	ur := infrastructure.NewUserRepository()
+	db := mysql.CreateSQLInstance()
+	defer db.Close()
+
+	ur := infrastructure.NewUserRepository(db)
 	uis := service.NewUserIdService(ur)
 	uts := service.NewUserTokenService(ur)
 
@@ -61,7 +65,10 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	header := r.Header
 	stringToken := header["X-Token"][0] // なんで大文字になる？
 
-	ur := infrastructure.NewUserRepository()
+	db := mysql.CreateSQLInstance()
+	defer db.Close()
+
+	ur := infrastructure.NewUserRepository(db)
 	uis := service.NewUserIdService(ur)
 	uts := service.NewUserTokenService(ur)
 
@@ -102,7 +109,10 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	name := uuj.Name
 
-	ur := infrastructure.NewUserRepository()
+	db := mysql.CreateSQLInstance()
+	defer db.Close()
+
+	ur := infrastructure.NewUserRepository(db)
 	uis := service.NewUserIdService(ur)
 	uts := service.NewUserTokenService(ur)
 

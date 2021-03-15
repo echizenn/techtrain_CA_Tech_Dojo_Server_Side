@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/application"
+	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/db/mysql"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/infrastructure"
 )
 
@@ -21,7 +22,12 @@ func UserHoldCharacterList(w http.ResponseWriter, r *http.Request) {
 	header := r.Header
 	token := header["X-Token"][0] // なんで大文字になる？、0って明示して大丈夫？
 
-	ur := infrastructure.NewUserRepository()
+	// dbインスタンス作成
+
+	db := mysql.CreateSQLInstance()
+	defer db.Close()
+
+	ur := infrastructure.NewUserRepository(db)
 	cr := infrastructure.NewCharacterRepository()
 	ucr := infrastructure.NewUsersCharactersRepository(cr)
 
