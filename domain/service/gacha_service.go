@@ -5,18 +5,18 @@ import (
 	"math/rand"
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain"
-	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/repository_interface"
+	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/repository"
 )
 
 type GachaService struct {
-	characterRepository repository_interface.ICharacterRepository
+	characterRepository repository.ICharacterRepository
 }
 
-func NewGachaService(characterRepository repository_interface.ICharacterRepository) GachaService {
+func NewGachaService(characterRepository repository.ICharacterRepository) GachaService {
 	return GachaService{characterRepository}
 }
 
-func (gs GachaService) Draw() *domain.Character {
+func (gs *GachaService) Draw() *domain.Character {
 	maxId, err := gs.characterRepository.GetMaxId()
 	if err != nil {
 		log.Fatal(err)

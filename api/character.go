@@ -1,19 +1,15 @@
-package handler
+package api
 
 import (
 	"encoding/json"
 	"log"
 	"net/http"
-
-	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/application"
-	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/repository"
 )
 
-func UserHoldCharacterList(w http.ResponseWriter, r *http.Request) {
+func (api *GameAPI) UserHoldCharacterList(w http.ResponseWriter, r *http.Request) {
 	// 確認が重複になるのでいらない気もする
 	if r.Method != http.MethodGet {
 		w.WriteHeader(http.StatusMethodNotAllowed) // 405
-		// ここの処理怪しさしかない
 		w.Write([]byte("GETだけです。"))
 		return
 	}
@@ -21,13 +17,7 @@ func UserHoldCharacterList(w http.ResponseWriter, r *http.Request) {
 	header := r.Header
 	token := header["X-Token"][0] // なんで大文字になる？、0って明示して大丈夫？
 
-	ur := repository.NewUserRepository()
-	cr := repository.NewCharacterRepository()
-	ucr := repository.NewUsersCharactersRepository(cr)
-
-	ucas := application.NewUsersCharactersApplicationService(ur, ucr)
-
-	userHoldCharacters, err := ucas.Hold(token)
+	userHoldCharacters, err := api.ucas.Hold(token)
 	if err != nil {
 		log.Fatal(err)
 	}

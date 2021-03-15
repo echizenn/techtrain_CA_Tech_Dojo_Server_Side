@@ -2,23 +2,23 @@ package application
 
 import (
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain"
-	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/repository_interface"
+	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/repository"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/service"
 )
 
 type UserApplicationService struct {
-	userRepository   repository_interface.IUserRepository
+	userRepository   repository.IUserRepository
 	userIdService    service.UserIdService
 	userTokenService service.UserTokenService
 }
 
-func NewUserApplicationService(userRepository repository_interface.IUserRepository,
+func NewUserApplicationService(userRepository repository.IUserRepository,
 	userIdService service.UserIdService,
 	userTokenService service.UserTokenService) UserApplicationService {
 	return UserApplicationService{userRepository, userIdService, userTokenService}
 }
 
-func (uas UserApplicationService) Register(name string) (*string, error) {
+func (uas *UserApplicationService) Register(name string) (*string, error) {
 	userId := uas.userIdService.Create()
 
 	userName, err := domain.NewUserName(name)
@@ -37,7 +37,7 @@ func (uas UserApplicationService) Register(name string) (*string, error) {
 	return &stringUserToken, nil
 }
 
-func (uas UserApplicationService) GetName(token string) (*string, error) {
+func (uas *UserApplicationService) GetName(token string) (*string, error) {
 	targetToken, err := domain.NewUserToken(token)
 	if err != nil {
 		return nil, err
@@ -53,7 +53,7 @@ func (uas UserApplicationService) GetName(token string) (*string, error) {
 	return &stringName, nil
 }
 
-func (uas UserApplicationService) Update(name string, token string) error {
+func (uas *UserApplicationService) Update(name string, token string) error {
 	userToken, err := domain.NewUserToken(token)
 	if err != nil {
 		return err
@@ -70,7 +70,7 @@ func (uas UserApplicationService) Update(name string, token string) error {
 
 	newUser := user.SetName(*newName)
 
-	err = uas.userRepository.Update(&newUser)
+	err = uas.userRepository.Update(newUser)
 	if err != nil {
 		return err
 	}

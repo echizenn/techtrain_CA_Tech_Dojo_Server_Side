@@ -1,4 +1,4 @@
-package handler
+package api
 
 import (
 	"bytes"
@@ -6,20 +6,15 @@ import (
 	"io"
 	"log"
 	"net/http"
-
-	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/application"
-	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/service"
-	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/repository"
 )
 
 type createUserJson struct {
 	Name string `json:"name"`
 }
 
-func CreateUser(w http.ResponseWriter, r *http.Request) {
+func (api *GameAPI) CreateUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusMethodNotAllowed) // 405
-		// ここの処理怪しさしかない
 		w.Write([]byte("POSTだけです。"))
 		return
 	}
@@ -35,13 +30,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	name := cuj.Name
 
-	ur := repository.NewUserRepository()
-	uis := service.NewUserIdService(ur)
-	uts := service.NewUserTokenService(ur)
-
-	uas := application.NewUserApplicationService(ur, uis, uts)
-
-	token, err := uas.Register(name)
+	token, err := api.uas.Register(name)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -50,10 +39,9 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func GetUser(w http.ResponseWriter, r *http.Request) {
+func (api *GameAPI) GetUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		w.WriteHeader(http.StatusMethodNotAllowed) // 405
-		// ここの処理怪しさしかない
 		w.Write([]byte("GETだけです。"))
 		return
 	}
@@ -61,13 +49,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	header := r.Header
 	stringToken := header["X-Token"][0] // なんで大文字になる？
 
-	ur := repository.NewUserRepository()
-	uis := service.NewUserIdService(ur)
-	uts := service.NewUserTokenService(ur)
-
-	uas := application.NewUserApplicationService(ur, uis, uts)
-
-	name, err := uas.GetName(stringToken)
+	name, err := api.uas.GetName(stringToken)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -80,10 +62,9 @@ type updateUserJson struct {
 	Name string `json:"name"`
 }
 
-func UpdateUser(w http.ResponseWriter, r *http.Request) {
+func (api *GameAPI) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPut {
 		w.WriteHeader(http.StatusMethodNotAllowed) // 405
-		// ここの処理怪しさしかない
 		w.Write([]byte("PUTだけです。"))
 		return
 	}
@@ -102,13 +83,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	name := uuj.Name
 
-	ur := repository.NewUserRepository()
-	uis := service.NewUserIdService(ur)
-	uts := service.NewUserTokenService(ur)
-
-	uas := application.NewUserApplicationService(ur, uis, uts)
-
-	err := uas.Update(name, token)
+	err := api.uas.Update(name, token)
 	if err != nil {
 		log.Fatal(err)
 	}

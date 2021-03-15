@@ -8,20 +8,20 @@ type User struct {
 	token UserToken
 }
 
-func (u User) GetId() UserId {
+func (u *User) GetId() UserId {
 	return u.id
 }
 
-func (u User) GetName() UserName {
+func (u *User) GetName() UserName {
 	return u.name
 }
 
-func (u User) SetName(name UserName) User {
+func (u *User) SetName(name UserName) *User {
 	u.name = name
 	return u
 }
 
-func (u User) GetToken() UserToken {
+func (u *User) GetToken() UserToken {
 	return u.token
 }
 

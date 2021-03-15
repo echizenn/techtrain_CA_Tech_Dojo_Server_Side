@@ -8,15 +8,15 @@ type Character struct {
 	rarity CharacterRarity
 }
 
-func (c Character) GetId() CharacterId {
+func (c *Character) GetId() CharacterId {
 	return c.id
 }
 
-func (c Character) GetName() CharacterName {
+func (c *Character) GetName() CharacterName {
 	return c.name
 }
 
-func (c Character) GetRarity() CharacterRarity {
+func (c *Character) GetRarity() CharacterRarity {
 	return c.rarity
 }
 

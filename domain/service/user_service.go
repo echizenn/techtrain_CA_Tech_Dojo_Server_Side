@@ -6,18 +6,18 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain"
-	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/repository_interface"
+	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/repository"
 )
 
 type UserTokenService struct {
-	userRepository repository_interface.IUserRepository
+	userRepository repository.IUserRepository
 }
 
-func NewUserTokenService(userRepository repository_interface.IUserRepository) UserTokenService {
+func NewUserTokenService(userRepository repository.IUserRepository) UserTokenService {
 	return UserTokenService{userRepository}
 }
 
-func (uts UserTokenService) Create() *domain.UserToken {
+func (uts *UserTokenService) Create() *domain.UserToken {
 	// ランダム生成
 	u, err := uuid.NewRandom()
 	if err != nil {
@@ -38,7 +38,7 @@ func (uts UserTokenService) Create() *domain.UserToken {
 	return token
 }
 
-func (uts UserTokenService) Exists(token domain.UserToken) bool {
+func (uts *UserTokenService) Exists(token domain.UserToken) bool {
 	_, err := uts.userRepository.FindByToken(&token)
 	if err != nil {
 		// この処理いいか微妙
@@ -48,14 +48,14 @@ func (uts UserTokenService) Exists(token domain.UserToken) bool {
 }
 
 type UserIdService struct {
-	userRepository repository_interface.IUserRepository
+	userRepository repository.IUserRepository
 }
 
-func NewUserIdService(userRepository repository_interface.IUserRepository) UserIdService {
+func NewUserIdService(userRepository repository.IUserRepository) UserIdService {
 	return UserIdService{userRepository}
 }
 
-func (uis UserIdService) Create() *domain.UserId {
+func (uis *UserIdService) Create() *domain.UserId {
 	// 現在最大のidを取得
 	maxUserId, err := uis.userRepository.GetMaxId()
 	var newId *domain.UserId
