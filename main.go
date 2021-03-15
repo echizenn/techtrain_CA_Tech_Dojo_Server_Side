@@ -15,7 +15,7 @@ func main() {
 
 	gameAPI := wire.InitGameAPI(db)
 
-	mux := Router(gameAPI)
+	mux := Server(gameAPI)
 	if err := http.ListenAndServe(":8088", mux); err != nil {
 		panic(err)
 	}
@@ -31,7 +31,7 @@ func (m methodHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "method not allowed.", http.StatusMethodNotAllowed)
 }
 
-func Router(gameAPI api.GameAPI) *http.ServeMux {
+func Server(gameAPI api.GameAPI) *http.ServeMux {
 	mux := http.NewServeMux()
 	// user
 	mux.Handle("/user/create", methodHandler{http.MethodPost: http.HandlerFunc(gameAPI.CreateUser)})

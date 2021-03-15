@@ -1,6 +1,7 @@
 package application
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain"
@@ -19,9 +20,9 @@ func NewUsersCharactersApplicationService(
 }
 
 type UserHoldCharacter struct {
-	// userCharacterId string `json:"userCharacterID"`
-	CharacterId string `json:"characterID"`
-	Name        string `json:"name"`
+	UserCharacterId string `json:"userCharacterID"`
+	CharacterId     string `json:"characterID"`
+	Name            string `json:"name"`
 }
 type UserHoldCharacters []UserHoldCharacter
 
@@ -36,15 +37,23 @@ func (hcas *UsersCharactersApplicationService) Hold(token string) (*UserHoldChar
 		return nil, err
 	}
 
-	characters, err := hcas.usersCharactersRepository.FindByUser(user)
+	characters, ids, err := hcas.usersCharactersRepository.FindByUser(user)
 	if err != nil {
 		return nil, err
 	}
 
+	for _, id := range *ids {
+		fmt.Printf(strconv.Itoa(*id))
+	}
+
 	var userHoldCharacters UserHoldCharacters
 
-	for _, character := range *characters {
+	for i := range *characters {
+		character := (*characters)[i]
+		id := (*ids)[i]
+
 		var userHoldCharacter UserHoldCharacter
+		userHoldCharacter.UserCharacterId = strconv.Itoa(*id)
 		intCharacterId := character.GetId()
 		userHoldCharacter.CharacterId = strconv.Itoa(int(intCharacterId))
 		userHoldCharacter.Name = string(character.GetName())
