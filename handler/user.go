@@ -8,7 +8,6 @@ import (
 	"net/http"
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/application"
-	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/db/mysql"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/service"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/infrastructure"
 )
@@ -35,10 +34,7 @@ func (api *GameAPI) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	name := cuj.Name
 
-	db := mysql.CreateSQLInstance()
-	defer db.Close()
-
-	ur := infrastructure.NewUserRepository(db)
+	ur := infrastructure.NewUserRepository(api.db)
 	uis := service.NewUserIdService(ur)
 	uts := service.NewUserTokenService(ur)
 
@@ -63,10 +59,7 @@ func (api *GameAPI) GetUser(w http.ResponseWriter, r *http.Request) {
 	header := r.Header
 	stringToken := header["X-Token"][0] // なんで大文字になる？
 
-	db := mysql.CreateSQLInstance()
-	defer db.Close()
-
-	ur := infrastructure.NewUserRepository(db)
+	ur := infrastructure.NewUserRepository(api.db)
 	uis := service.NewUserIdService(ur)
 	uts := service.NewUserTokenService(ur)
 
@@ -106,10 +99,7 @@ func (api *GameAPI) UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	name := uuj.Name
 
-	db := mysql.CreateSQLInstance()
-	defer db.Close()
-
-	ur := infrastructure.NewUserRepository(db)
+	ur := infrastructure.NewUserRepository(api.db)
 	uis := service.NewUserIdService(ur)
 	uts := service.NewUserTokenService(ur)
 

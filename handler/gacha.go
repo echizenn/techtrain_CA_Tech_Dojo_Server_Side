@@ -8,7 +8,6 @@ import (
 	"net/http"
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/application"
-	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/db/mysql"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/service"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/infrastructure"
 )
@@ -38,12 +37,9 @@ func (api *GameAPI) GachaDraw(w http.ResponseWriter, r *http.Request) {
 
 	times := gdj.Times
 
-	db := mysql.CreateSQLInstance()
-	defer db.Close()
-
-	ur := infrastructure.NewUserRepository(db)
-	cr := infrastructure.NewCharacterRepository(db)
-	ucr := infrastructure.NewUsersCharactersRepository(cr, db)
+	ur := infrastructure.NewUserRepository(api.db)
+	cr := infrastructure.NewCharacterRepository(api.db)
+	ucr := infrastructure.NewUsersCharactersRepository(cr, api.db)
 
 	gs := service.NewGachaService(cr)
 
