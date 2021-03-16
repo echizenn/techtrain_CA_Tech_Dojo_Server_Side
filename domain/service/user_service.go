@@ -41,7 +41,7 @@ func (uts *UserTokenService) Create() *domain.UserToken {
 func (uts *UserTokenService) Exists(token domain.UserToken) bool {
 	_, err := uts.userRepository.FindByToken(&token)
 	if err != nil {
-		// この処理いいか微妙
+		// この処理いいか微妙(よくない、FindByTokenではなく、Existsメソッドを作れ)
 		return false
 	}
 	return true
