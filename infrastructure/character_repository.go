@@ -6,6 +6,7 @@ import (
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/repository"
 	_ "github.com/go-sql-driver/mysql"
+	"golang.org/x/xerrors"
 )
 
 type characterRepository struct {
@@ -22,17 +23,17 @@ func (cr *characterRepository) FindById(characterId *domain.CharacterId) (*domai
 
 	err := cr.db.QueryRow("SELECT name, rarity FROM characters WHERE id=?", characterId).Scan(&name, &rarity)
 	if err != nil {
-		return nil, err
+		return nil, xerrors.Errorf("error: %w", err)
 	}
 
 	characterRarity, err := domain.NewCharacterRarity(rarity)
 	if err != nil {
-		return nil, err
+		return nil, xerrors.Errorf("error: %w", err)
 	}
 
 	characterName, err := domain.NewCharacterName(name)
 	if err != nil {
-		return nil, err
+		return nil, xerrors.Errorf("error: %w", err)
 	}
 
 	character := domain.NewCharacter(*characterId, *characterName, *characterRarity)
@@ -44,12 +45,12 @@ func (cr *characterRepository) GetMaxId() (*domain.CharacterId, error) {
 	var id int
 	err := cr.db.QueryRow("SELECT MAX(id) FROM characters").Scan(&id)
 	if err != nil {
-		return nil, err
+		return nil, xerrors.Errorf("error: %w", err)
 	}
 
 	userId, err := domain.NewCharacterId(id)
 	if err != nil {
-		return nil, err
+		return nil, xerrors.Errorf("error: %w", err)
 	}
 
 	return userId, nil

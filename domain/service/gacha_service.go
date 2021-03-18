@@ -5,6 +5,7 @@ import (
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/repository"
+	"golang.org/x/xerrors"
 )
 
 type GachaService struct {
@@ -18,7 +19,7 @@ func NewGachaService(characterRepository repository.ICharacterRepository) GachaS
 func (gs *GachaService) Draw() (*domain.Character, error) {
 	maxId, err := gs.characterRepository.GetMaxId()
 	if err != nil {
-		return nil, err
+		return nil, xerrors.Errorf("error: %w", err)
 	}
 	var intCharacterId int = 0
 	for intCharacterId == 0 {
@@ -27,12 +28,12 @@ func (gs *GachaService) Draw() (*domain.Character, error) {
 		intRandomCharacterId := rand.Intn(int(*maxId)) + 1
 		randomCharacterId, err := domain.NewCharacterId(intRandomCharacterId)
 		if err != nil {
-			return nil, err
+			return nil, xerrors.Errorf("error: %w", err)
 		}
 		randomCharacter, err := gs.characterRepository.FindById(randomCharacterId)
 		// 長期的にはIdに欠番があってもガチャ回るようにしたい
 		if err != nil {
-			return nil, err
+			return nil, xerrors.Errorf("error: %w", err)
 		}
 		rarity := randomCharacter.GetRarity()
 		intRarity := int(rarity)
@@ -50,11 +51,11 @@ func (gs *GachaService) Draw() (*domain.Character, error) {
 	}
 	characterId, err := domain.NewCharacterId(intCharacterId)
 	if err != nil {
-		return nil, err
+		return nil, xerrors.Errorf("error: %w", err)
 	}
 	character, err := gs.characterRepository.FindById(characterId)
 	if err != nil {
-		return nil, err
+		return nil, xerrors.Errorf("error: %w", err)
 	}
 	return character, nil
 }

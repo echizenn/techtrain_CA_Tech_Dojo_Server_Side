@@ -5,6 +5,7 @@ import (
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/repository"
+	"golang.org/x/xerrors"
 )
 
 type UserTokenService struct {
@@ -19,7 +20,7 @@ func (uts *UserTokenService) Create() (*domain.UserToken, error) {
 	// ランダム生成
 	u, err := uuid.NewRandom()
 	if err != nil {
-		return nil, err
+		return nil, xerrors.Errorf("error: %w", err)
 	}
 	stringToken := u.String()
 	token, _ := domain.NewUserToken(stringToken)
@@ -28,7 +29,7 @@ func (uts *UserTokenService) Create() (*domain.UserToken, error) {
 		// ランダム生成
 		u, err := uuid.NewRandom()
 		if err != nil {
-			return nil, err
+			return nil, xerrors.Errorf("error: %w", err)
 		}
 		stringToken := u.String()
 		token, _ = domain.NewUserToken(stringToken)
@@ -62,14 +63,14 @@ func (uis *UserIdService) Create() (*domain.UserId, error) {
 	if err != nil {
 		newId, err = domain.NewUserId(1)
 		if err != nil {
-			return nil, err
+			return nil, xerrors.Errorf("error: %w", err)
 		}
 		// 登録者いるとき
 	} else {
 		id := int(*maxUserId) + 1
 		newId, err = domain.NewUserId(id)
 		if err != nil {
-			return nil, err
+			return nil, xerrors.Errorf("error: %w", err)
 		}
 	}
 

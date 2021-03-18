@@ -6,6 +6,7 @@ import (
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/repository"
+	"golang.org/x/xerrors"
 )
 
 type UsersCharactersApplicationService struct {
@@ -29,17 +30,17 @@ type UserHoldCharacters []UserHoldCharacter
 func (hcas *UsersCharactersApplicationService) Hold(token string) (*UserHoldCharacters, error) {
 	targetToken, err := domain.NewUserToken(token)
 	if err != nil {
-		return nil, err
+		return nil, xerrors.Errorf("error: %w", err)
 	}
 
 	user, err := hcas.userRepository.FindByToken(targetToken)
 	if err != nil {
-		return nil, err
+		return nil, xerrors.Errorf("error: %w", err)
 	}
 
 	characters, ids, err := hcas.usersCharactersRepository.FindByUser(user)
 	if err != nil {
-		return nil, err
+		return nil, xerrors.Errorf("error: %w", err)
 	}
 
 	for _, id := range *ids {
