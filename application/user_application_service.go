@@ -19,14 +19,20 @@ func NewUserApplicationService(userRepository repository.IUserRepository,
 }
 
 func (uas *UserApplicationService) Register(name string) (*string, error) {
-	userId := uas.userIdService.Create()
+	userId, err := uas.userIdService.Create()
+	if err != nil {
+		return nil, err
+	}
 
 	userName, err := domain.NewUserName(name)
 	if err != nil {
 		return nil, err
 	}
 
-	userToken := uas.userTokenService.Create()
+	userToken, err := uas.userTokenService.Create()
+	if err != nil {
+		return nil, err
+	}
 
 	user := domain.NewUser(*userId, *userName, *userToken)
 	err = uas.userRepository.Insert(&user)

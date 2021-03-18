@@ -17,11 +17,11 @@ func NewUserTokenService(userRepository repository.IUserRepository) UserTokenSer
 	return UserTokenService{userRepository}
 }
 
-func (uts *UserTokenService) Create() *domain.UserToken {
+func (uts *UserTokenService) Create() (*domain.UserToken, error) {
 	// ランダム生成
 	u, err := uuid.NewRandom()
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	stringToken := u.String()
 	token, _ := domain.NewUserToken(stringToken)
@@ -35,7 +35,7 @@ func (uts *UserTokenService) Create() *domain.UserToken {
 		stringToken := u.String()
 		token, _ = domain.NewUserToken(stringToken)
 	}
-	return token
+	return token, nil
 }
 
 func (uts *UserTokenService) Exists(token domain.UserToken) bool {
@@ -55,7 +55,7 @@ func NewUserIdService(userRepository repository.IUserRepository) UserIdService {
 	return UserIdService{userRepository}
 }
 
-func (uis *UserIdService) Create() *domain.UserId {
+func (uis *UserIdService) Create() (*domain.UserId, error) {
 	// 現在最大のidを取得
 	maxUserId, err := uis.userRepository.GetMaxId()
 	var newId *domain.UserId
@@ -64,16 +64,16 @@ func (uis *UserIdService) Create() *domain.UserId {
 	if err != nil {
 		newId, err = domain.NewUserId(1)
 		if err != nil {
-			log.Fatal(err)
+			return nil, err
 		}
 		// 登録者いるとき
 	} else {
 		id := int(*maxUserId) + 1
 		newId, err = domain.NewUserId(id)
 		if err != nil {
-			log.Fatal(err)
+			return nil, err
 		}
 	}
 
-	return newId
+	return newId, nil
 }
