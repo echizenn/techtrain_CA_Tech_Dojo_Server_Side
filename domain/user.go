@@ -43,7 +43,7 @@ func NewUserId(value int) (*UserId, error) {
 
 func NewUserName(value string) (*UserName, error) {
 	if len(value) < 1 {
-		return nil, errors.New(("nameは1文字以上である必要があります。"))
+		return nil, errors.New("nameは1文字以上である必要があります。")
 	}
 	name := UserName(value)
 	return &name, nil
@@ -51,7 +51,7 @@ func NewUserName(value string) (*UserName, error) {
 
 func NewUserToken(value string) (*UserToken, error) {
 	if len(value) < 1 {
-		return nil, errors.New(("tokenは1文字以上である必要があります。"))
+		return nil, errors.New("tokenは1文字以上である必要があります。")
 	}
 	token := UserToken(value)
 	return &token, nil

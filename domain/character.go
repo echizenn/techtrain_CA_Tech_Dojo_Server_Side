@@ -38,7 +38,7 @@ func NewCharacterId(value int) (*CharacterId, error) {
 
 func NewCharacterName(value string) (*CharacterName, error) {
 	if len(value) < 1 {
-		return nil, errors.New(("nameは1文字以上である必要があります。"))
+		return nil, errors.New("nameは1文字以上である必要があります。")
 	}
 	name := CharacterName(value)
 	return &name, nil
