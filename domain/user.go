@@ -1,6 +1,8 @@
 package domain
 
-import "errors"
+import (
+	"golang.org/x/xerrors"
+)
 
 type User struct {
 	id    UserId
@@ -35,7 +37,7 @@ type UserToken string
 
 func NewUserId(value int) (*UserId, error) {
 	if value < 1 {
-		return nil, errors.New("idは1以上の整数である必要があります。")
+		return nil, xerrors.New("idは1以上の整数である必要があります。")
 	}
 	id := UserId(value)
 	return &id, nil
@@ -43,7 +45,7 @@ func NewUserId(value int) (*UserId, error) {
 
 func NewUserName(value string) (*UserName, error) {
 	if len(value) < 1 {
-		return nil, errors.New("nameは1文字以上である必要があります。")
+		return nil, xerrors.New("nameは1文字以上である必要があります。")
 	}
 	name := UserName(value)
 	return &name, nil
@@ -51,7 +53,7 @@ func NewUserName(value string) (*UserName, error) {
 
 func NewUserToken(value string) (*UserToken, error) {
 	if len(value) < 1 {
-		return nil, errors.New("tokenは1文字以上である必要があります。")
+		return nil, xerrors.New("tokenは1文字以上である必要があります。")
 	}
 	token := UserToken(value)
 	return &token, nil
