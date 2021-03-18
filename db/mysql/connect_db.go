@@ -12,7 +12,7 @@ import (
 func CreateSQLInstance() *sql.DB {
 	dbuser := constants.MysqlDefaultUser
 	dbpassword := constants.MysqlDefaultPassword
-	protocal := "tcp(db:3306)"
+	protocal := constants.MysqlDefaultProtocal
 	dbname := constants.MysqlDefaultName
 
 	dataSource := fmt.Sprintf("%s:%s@%s/%s", dbuser, dbpassword, protocal, dbname)
