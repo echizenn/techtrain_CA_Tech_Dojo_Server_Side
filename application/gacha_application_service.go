@@ -37,7 +37,10 @@ func (gas *GachaApplicationService) Draw(token string) (*GachaDrawResult, error)
 		return nil, err
 	}
 
-	character := gas.gachaService.Draw()
+	character, err := gas.gachaService.Draw()
+	if err != nil {
+		return nil, err
+	}
 
 	err = gas.usersCharactersRepository.Insert(user, character)
 	if err != nil {

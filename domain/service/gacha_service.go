@@ -1,7 +1,6 @@
 package service
 
 import (
-	"log"
 	"math/rand"
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain"
@@ -16,10 +15,10 @@ func NewGachaService(characterRepository repository.ICharacterRepository) GachaS
 	return GachaService{characterRepository}
 }
 
-func (gs *GachaService) Draw() *domain.Character {
+func (gs *GachaService) Draw() (*domain.Character, error) {
 	maxId, err := gs.characterRepository.GetMaxId()
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	var intCharacterId int = 0
 	for intCharacterId == 0 {
@@ -28,12 +27,12 @@ func (gs *GachaService) Draw() *domain.Character {
 		intRandomCharacterId := rand.Intn(int(*maxId)) + 1
 		randomCharacterId, err := domain.NewCharacterId(intRandomCharacterId)
 		if err != nil {
-			log.Fatal(err)
+			return nil, err
 		}
 		randomCharacter, err := gs.characterRepository.FindById(randomCharacterId)
 		// 長期的にはIdに欠番があってもガチャ回るようにしたい
 		if err != nil {
-			log.Fatal(err)
+			return nil, err
 		}
 		rarity := randomCharacter.GetRarity()
 		intRarity := int(rarity)
@@ -51,11 +50,11 @@ func (gs *GachaService) Draw() *domain.Character {
 	}
 	characterId, err := domain.NewCharacterId(intCharacterId)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	character, err := gs.characterRepository.FindById(characterId)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
-	return character
+	return character, nil
 }

@@ -1,8 +1,6 @@
 package service
 
 import (
-	"log"
-
 	"github.com/google/uuid"
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain"
@@ -30,7 +28,7 @@ func (uts *UserTokenService) Create() (*domain.UserToken, error) {
 		// ランダム生成
 		u, err := uuid.NewRandom()
 		if err != nil {
-			log.Fatal(err)
+			return nil, err
 		}
 		stringToken := u.String()
 		token, _ = domain.NewUserToken(stringToken)
