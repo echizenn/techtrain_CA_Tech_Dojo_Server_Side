@@ -55,7 +55,7 @@ func (hcas *UsersCharactersApplicationService) Hold(token string) (*UserHoldChar
 
 		var userHoldCharacter UserHoldCharacter
 		userHoldCharacter.UserCharacterID = strconv.Itoa(*id)
-		intCharacterID := character.GetId()
+		intCharacterID := character.GetID()
 		userHoldCharacter.CharacterID = strconv.Itoa(int(intCharacterID))
 		userHoldCharacter.Name = string(character.GetName())
 		userHoldCharacters = append(userHoldCharacters, userHoldCharacter)

@@ -10,7 +10,7 @@ type Character struct {
 	rarity CharacterRarity
 }
 
-func (c *Character) GetId() CharacterID {
+func (c *Character) GetID() CharacterID {
 	return c.id
 }
 

@@ -48,7 +48,7 @@ func (gas *GachaApplicationService) Draw(token string) (*GachaDrawResult, error)
 		return nil, xerrors.Errorf("error: %w", err)
 	}
 
-	characterID := character.GetId()
+	characterID := character.GetID()
 	intCharacterID := int(characterID)
 	stringCharacterID := strconv.Itoa(intCharacterID)
 

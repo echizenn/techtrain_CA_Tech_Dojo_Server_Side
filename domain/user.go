@@ -10,7 +10,7 @@ type User struct {
 	token UserToken
 }
 
-func (u *User) GetId() UserID {
+func (u *User) GetID() UserID {
 	return u.id
 }
 

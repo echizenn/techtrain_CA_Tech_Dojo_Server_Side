@@ -56,23 +56,23 @@ func NewUserIDService(userRepository repository.IUserRepository) UserIDService {
 
 func (uis *UserIDService) Create() (*domain.UserID, error) {
 	// 現在最大のidを取得
-	maxUserID, err := uis.userRepository.GetMaxId()
-	var newId *domain.UserID
+	maxUserID, err := uis.userRepository.GetMaxID()
+	var newID *domain.UserID
 
 	// 登録者いないとき(この方法でハンドリングしていいの？)
 	if err != nil {
-		newId, err = domain.NewUserID(1)
+		newID, err = domain.NewUserID(1)
 		if err != nil {
 			return nil, xerrors.Errorf("error: %w", err)
 		}
 		// 登録者いるとき
 	} else {
 		id := int(*maxUserID) + 1
-		newId, err = domain.NewUserID(id)
+		newID, err = domain.NewUserID(id)
 		if err != nil {
 			return nil, xerrors.Errorf("error: %w", err)
 		}
 	}
 
-	return newId, nil
+	return newID, nil
 }

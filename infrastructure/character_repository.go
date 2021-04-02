@@ -17,7 +17,7 @@ func NewCharacterRepository(db *sql.DB) repository.ICharacterRepository {
 	return &characterRepository{db}
 }
 
-func (cr *characterRepository) FindById(characterID *domain.CharacterID) (*domain.Character, error) {
+func (cr *characterRepository) BindByID(characterID *domain.CharacterID) (*domain.Character, error) {
 	var rarity int
 	var name string
 
@@ -41,7 +41,7 @@ func (cr *characterRepository) FindById(characterID *domain.CharacterID) (*domai
 	return &character, nil
 }
 
-func (cr *characterRepository) GetMaxId() (*domain.CharacterID, error) {
+func (cr *characterRepository) GetMaxID() (*domain.CharacterID, error) {
 	var id int
 	err := cr.db.QueryRow("SELECT MAX(id) FROM characters").Scan(&id)
 	if err != nil {

@@ -17,7 +17,7 @@ func NewGachaService(characterRepository repository.ICharacterRepository) GachaS
 }
 
 func (gs *GachaService) Draw() (*domain.Character, error) {
-	maxId, err := gs.characterRepository.GetMaxId()
+	maxID, err := gs.characterRepository.GetMaxID()
 	if err != nil {
 		return nil, xerrors.Errorf("error: %w", err)
 	}
@@ -25,13 +25,13 @@ func (gs *GachaService) Draw() (*domain.Character, error) {
 	for intCharacterID == 0 {
 		// rand.Intnは[0, n)でランダムな整数返す。[1,n]で返して欲しいので+1
 		// ガチャする候補のキャラクターを選んでいる
-		intRandomCharacterID := rand.Intn(int(*maxId)) + 1
+		intRandomCharacterID := rand.Intn(int(*maxID)) + 1
 		randomCharacterID, err := domain.NewCharacterID(intRandomCharacterID)
 		if err != nil {
 			return nil, xerrors.Errorf("error: %w", err)
 		}
-		randomCharacter, err := gs.characterRepository.FindById(randomCharacterID)
-		// 長期的にはIdに欠番があってもガチャ回るようにしたい
+		randomCharacter, err := gs.characterRepository.BindByID(randomCharacterID)
+		// 長期的にはIDに欠番があってもガチャ回るようにしたい
 		if err != nil {
 			return nil, xerrors.Errorf("error: %w", err)
 		}
@@ -53,7 +53,7 @@ func (gs *GachaService) Draw() (*domain.Character, error) {
 	if err != nil {
 		return nil, xerrors.Errorf("error: %w", err)
 	}
-	character, err := gs.characterRepository.FindById(characterID)
+	character, err := gs.characterRepository.BindByID(characterID)
 	if err != nil {
 		return nil, xerrors.Errorf("error: %w", err)
 	}

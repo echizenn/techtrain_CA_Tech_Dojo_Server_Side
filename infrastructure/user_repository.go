@@ -23,7 +23,7 @@ func (ur *userRepository) Insert(user *domain.User) error {
 		return xerrors.Errorf("error: %w", err)
 	}
 
-	_, err = rows.Exec(user.GetId(), user.GetName(), user.GetToken())
+	_, err = rows.Exec(user.GetID(), user.GetName(), user.GetToken())
 	if err != nil {
 		return xerrors.Errorf("error: %w", err)
 	}
@@ -38,7 +38,7 @@ func (ur *userRepository) Update(user *domain.User) error {
 	}
 
 	// この辺型大丈夫なのかよくわからない
-	_, err = rows.Exec(user.GetName(), user.GetId(), user.GetToken())
+	_, err = rows.Exec(user.GetName(), user.GetID(), user.GetToken())
 	if err != nil {
 		return xerrors.Errorf("error: %w", err)
 	}
@@ -70,7 +70,7 @@ func (ur *userRepository) FindByToken(userToken *domain.UserToken) (*domain.User
 	return &user, nil
 }
 
-func (ur *userRepository) GetMaxId() (*domain.UserID, error) {
+func (ur *userRepository) GetMaxID() (*domain.UserID, error) {
 	var id int
 	err := ur.db.QueryRow("SELECT MAX(id) FROM users").Scan(&id)
 	if err != nil {
