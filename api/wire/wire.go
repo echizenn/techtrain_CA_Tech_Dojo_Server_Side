@@ -18,7 +18,7 @@ func InitGameAPI(db *sql.DB) api.GameAPI {
 		infrastructure.NewCharacterRepository,
 		infrastructure.NewUsersCharactersRepository,
 		service.NewGachaService,
-		service.NewUserIdService,
+		service.NewUserIDService,
 		service.NewUserTokenService,
 		application.NewUserApplicationService,
 		application.NewGachaApplicationService,

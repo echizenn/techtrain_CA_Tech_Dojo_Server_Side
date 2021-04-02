@@ -48,10 +48,10 @@ func (cr *characterRepository) GetMaxId() (*domain.CharacterId, error) {
 		return nil, xerrors.Errorf("error: %w", err)
 	}
 
-	userId, err := domain.NewCharacterId(id)
+	userID, err := domain.NewCharacterId(id)
 	if err != nil {
 		return nil, xerrors.Errorf("error: %w", err)
 	}
 
-	return userId, nil
+	return userID, nil
 }

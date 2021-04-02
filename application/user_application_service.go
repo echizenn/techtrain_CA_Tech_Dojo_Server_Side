@@ -9,18 +9,18 @@ import (
 
 type UserApplicationService struct {
 	userRepository   repository.IUserRepository
-	userIdService    service.UserIdService
+	userIDService    service.UserIDService
 	userTokenService service.UserTokenService
 }
 
 func NewUserApplicationService(userRepository repository.IUserRepository,
-	userIdService service.UserIdService,
+	userIDService service.UserIDService,
 	userTokenService service.UserTokenService) UserApplicationService {
-	return UserApplicationService{userRepository, userIdService, userTokenService}
+	return UserApplicationService{userRepository, userIDService, userTokenService}
 }
 
 func (uas *UserApplicationService) Register(name string) (*string, error) {
-	userId, err := uas.userIdService.Create()
+	userID, err := uas.userIDService.Create()
 	if err != nil {
 		return nil, xerrors.Errorf("error: %w", err)
 	}
@@ -35,7 +35,7 @@ func (uas *UserApplicationService) Register(name string) (*string, error) {
 		return nil, xerrors.Errorf("error: %w", err)
 	}
 
-	user := domain.NewUser(*userId, *userName, *userToken)
+	user := domain.NewUser(*userID, *userName, *userToken)
 	err = uas.userRepository.Insert(&user)
 	if err != nil {
 		return nil, xerrors.Errorf("error: %w", err)

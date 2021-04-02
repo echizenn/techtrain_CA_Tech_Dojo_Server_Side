@@ -5,12 +5,12 @@ import (
 )
 
 type User struct {
-	id    UserId
+	id    UserID
 	name  UserName
 	token UserToken
 }
 
-func (u *User) GetId() UserId {
+func (u *User) GetId() UserID {
 	return u.id
 }
 
@@ -27,19 +27,19 @@ func (u *User) GetToken() UserToken {
 	return u.token
 }
 
-func NewUser(id UserId, name UserName, token UserToken) User {
+func NewUser(id UserID, name UserName, token UserToken) User {
 	return User{id, name, token}
 }
 
-type UserId int
+type UserID int
 type UserName string
 type UserToken string
 
-func NewUserId(value int) (*UserId, error) {
+func NewUserID(value int) (*UserID, error) {
 	if value < 1 {
 		return nil, xerrors.New("idは1以上の整数である必要があります。")
 	}
-	id := UserId(value)
+	id := UserID(value)
 	return &id, nil
 }
 

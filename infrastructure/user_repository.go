@@ -55,7 +55,7 @@ func (ur *userRepository) FindByToken(userToken *domain.UserToken) (*domain.User
 		return nil, xerrors.Errorf("error: %w", err)
 	}
 
-	userId, err := domain.NewUserId(id)
+	userID, err := domain.NewUserID(id)
 	if err != nil {
 		return nil, xerrors.Errorf("error: %w", err)
 	}
@@ -65,22 +65,22 @@ func (ur *userRepository) FindByToken(userToken *domain.UserToken) (*domain.User
 		return nil, xerrors.Errorf("error: %w", err)
 	}
 
-	user := domain.NewUser(*userId, *userName, *userToken)
+	user := domain.NewUser(*userID, *userName, *userToken)
 
 	return &user, nil
 }
 
-func (ur *userRepository) GetMaxId() (*domain.UserId, error) {
+func (ur *userRepository) GetMaxId() (*domain.UserID, error) {
 	var id int
 	err := ur.db.QueryRow("SELECT MAX(id) FROM users").Scan(&id)
 	if err != nil {
 		return nil, xerrors.Errorf("error: %w", err)
 	}
 
-	userId, err := domain.NewUserId(id)
+	userID, err := domain.NewUserID(id)
 	if err != nil {
 		return nil, xerrors.Errorf("error: %w", err)
 	}
 
-	return userId, nil
+	return userID, nil
 }

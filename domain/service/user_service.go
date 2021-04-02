@@ -46,29 +46,29 @@ func (uts *UserTokenService) Exists(token domain.UserToken) bool {
 	return true
 }
 
-type UserIdService struct {
+type UserIDService struct {
 	userRepository repository.IUserRepository
 }
 
-func NewUserIdService(userRepository repository.IUserRepository) UserIdService {
-	return UserIdService{userRepository}
+func NewUserIDService(userRepository repository.IUserRepository) UserIDService {
+	return UserIDService{userRepository}
 }
 
-func (uis *UserIdService) Create() (*domain.UserId, error) {
+func (uis *UserIDService) Create() (*domain.UserID, error) {
 	// 現在最大のidを取得
-	maxUserId, err := uis.userRepository.GetMaxId()
-	var newId *domain.UserId
+	maxUserID, err := uis.userRepository.GetMaxId()
+	var newId *domain.UserID
 
 	// 登録者いないとき(この方法でハンドリングしていいの？)
 	if err != nil {
-		newId, err = domain.NewUserId(1)
+		newId, err = domain.NewUserID(1)
 		if err != nil {
 			return nil, xerrors.Errorf("error: %w", err)
 		}
 		// 登録者いるとき
 	} else {
-		id := int(*maxUserId) + 1
-		newId, err = domain.NewUserId(id)
+		id := int(*maxUserID) + 1
+		newId, err = domain.NewUserID(id)
 		if err != nil {
 			return nil, xerrors.Errorf("error: %w", err)
 		}

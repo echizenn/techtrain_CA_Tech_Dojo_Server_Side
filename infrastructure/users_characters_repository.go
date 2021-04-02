@@ -33,7 +33,7 @@ func (ucr *usersCharactersRepository) Insert(user *domain.User, character *domai
 }
 
 func (ucr *usersCharactersRepository) FindByUser(user *domain.User) (*[]*domain.Character, *[]*int, error) {
-	userId := user.GetId()
+	userID := user.GetId()
 
 	var intCharacterId int
 	var characters []*domain.Character
@@ -41,7 +41,7 @@ func (ucr *usersCharactersRepository) FindByUser(user *domain.User) (*[]*domain.
 	var intId int
 	var ids []*int
 
-	rows, err := ucr.db.Query("SELECT id, character_id FROM users_characters WHERE user_id=?", userId)
+	rows, err := ucr.db.Query("SELECT id, character_id FROM users_characters WHERE user_id=?", userID)
 	if err != nil {
 		return nil, nil, xerrors.Errorf("error: %w", err)
 	}
