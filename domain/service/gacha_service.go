@@ -21,16 +21,16 @@ func (gs *GachaService) Draw() (*domain.Character, error) {
 	if err != nil {
 		return nil, xerrors.Errorf("error: %w", err)
 	}
-	var intCharacterId int = 0
-	for intCharacterId == 0 {
+	var intCharacterID int = 0
+	for intCharacterID == 0 {
 		// rand.Intnは[0, n)でランダムな整数返す。[1,n]で返して欲しいので+1
 		// ガチャする候補のキャラクターを選んでいる
-		intRandomCharacterId := rand.Intn(int(*maxId)) + 1
-		randomCharacterId, err := domain.NewCharacterId(intRandomCharacterId)
+		intRandomCharacterID := rand.Intn(int(*maxId)) + 1
+		randomCharacterID, err := domain.NewCharacterID(intRandomCharacterID)
 		if err != nil {
 			return nil, xerrors.Errorf("error: %w", err)
 		}
-		randomCharacter, err := gs.characterRepository.FindById(randomCharacterId)
+		randomCharacter, err := gs.characterRepository.FindById(randomCharacterID)
 		// 長期的にはIdに欠番があってもガチャ回るようにしたい
 		if err != nil {
 			return nil, xerrors.Errorf("error: %w", err)
@@ -46,14 +46,14 @@ func (gs *GachaService) Draw() (*domain.Character, error) {
 		// 計算量削減したいならあらかじめ全てのキャラクターのレア度から一発でガチャができるようにする
 		result := rand.Intn(intRarity)
 		if result == 0 {
-			intCharacterId = intRandomCharacterId
+			intCharacterID = intRandomCharacterID
 		}
 	}
-	characterId, err := domain.NewCharacterId(intCharacterId)
+	characterID, err := domain.NewCharacterID(intCharacterID)
 	if err != nil {
 		return nil, xerrors.Errorf("error: %w", err)
 	}
-	character, err := gs.characterRepository.FindById(characterId)
+	character, err := gs.characterRepository.FindById(characterID)
 	if err != nil {
 		return nil, xerrors.Errorf("error: %w", err)
 	}

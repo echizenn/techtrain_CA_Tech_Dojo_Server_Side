@@ -17,11 +17,11 @@ func NewCharacterRepository(db *sql.DB) repository.ICharacterRepository {
 	return &characterRepository{db}
 }
 
-func (cr *characterRepository) FindById(characterId *domain.CharacterId) (*domain.Character, error) {
+func (cr *characterRepository) FindById(characterID *domain.CharacterID) (*domain.Character, error) {
 	var rarity int
 	var name string
 
-	err := cr.db.QueryRow("SELECT name, rarity FROM characters WHERE id=?", characterId).Scan(&name, &rarity)
+	err := cr.db.QueryRow("SELECT name, rarity FROM characters WHERE id=?", characterID).Scan(&name, &rarity)
 	if err != nil {
 		return nil, xerrors.Errorf("error: %w", err)
 	}
@@ -36,19 +36,19 @@ func (cr *characterRepository) FindById(characterId *domain.CharacterId) (*domai
 		return nil, xerrors.Errorf("error: %w", err)
 	}
 
-	character := domain.NewCharacter(*characterId, *characterName, *characterRarity)
+	character := domain.NewCharacter(*characterID, *characterName, *characterRarity)
 
 	return &character, nil
 }
 
-func (cr *characterRepository) GetMaxId() (*domain.CharacterId, error) {
+func (cr *characterRepository) GetMaxId() (*domain.CharacterID, error) {
 	var id int
 	err := cr.db.QueryRow("SELECT MAX(id) FROM characters").Scan(&id)
 	if err != nil {
 		return nil, xerrors.Errorf("error: %w", err)
 	}
 
-	userID, err := domain.NewCharacterId(id)
+	userID, err := domain.NewCharacterID(id)
 	if err != nil {
 		return nil, xerrors.Errorf("error: %w", err)
 	}

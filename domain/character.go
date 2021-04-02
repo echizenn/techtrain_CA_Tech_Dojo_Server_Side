@@ -5,12 +5,12 @@ import (
 )
 
 type Character struct {
-	id     CharacterId
+	id     CharacterID
 	name   CharacterName
 	rarity CharacterRarity
 }
 
-func (c *Character) GetId() CharacterId {
+func (c *Character) GetId() CharacterID {
 	return c.id
 }
 
@@ -22,19 +22,19 @@ func (c *Character) GetRarity() CharacterRarity {
 	return c.rarity
 }
 
-func NewCharacter(id CharacterId, name CharacterName, rarity CharacterRarity) Character {
+func NewCharacter(id CharacterID, name CharacterName, rarity CharacterRarity) Character {
 	return Character{id, name, rarity}
 }
 
-type CharacterId int
+type CharacterID int
 type CharacterName string
 type CharacterRarity int
 
-func NewCharacterId(value int) (*CharacterId, error) {
+func NewCharacterID(value int) (*CharacterID, error) {
 	if value < 1 {
 		return nil, xerrors.New("idは1以上の整数である必要があります。")
 	}
-	id := CharacterId(value)
+	id := CharacterID(value)
 	return &id, nil
 }
 

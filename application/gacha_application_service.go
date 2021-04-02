@@ -23,7 +23,7 @@ func NewGachaApplicationService(
 }
 
 type GachaDrawResult struct {
-	CharacterId string `json:"characterID"`
+	CharacterID string `json:"characterID"`
 	Name        string `json:"name"`
 }
 
@@ -48,12 +48,12 @@ func (gas *GachaApplicationService) Draw(token string) (*GachaDrawResult, error)
 		return nil, xerrors.Errorf("error: %w", err)
 	}
 
-	characterId := character.GetId()
-	intCharacterId := int(characterId)
-	stringCharacterId := strconv.Itoa(intCharacterId)
+	characterID := character.GetId()
+	intCharacterID := int(characterID)
+	stringCharacterID := strconv.Itoa(intCharacterID)
 
 	characterName := character.GetName()
 	stringCharacterName := string(characterName)
 
-	return &GachaDrawResult{stringCharacterId, stringCharacterName}, nil
+	return &GachaDrawResult{stringCharacterID, stringCharacterName}, nil
 }

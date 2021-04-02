@@ -21,8 +21,8 @@ func NewUsersCharactersApplicationService(
 }
 
 type UserHoldCharacter struct {
-	UserCharacterId string `json:"userCharacterID"`
-	CharacterId     string `json:"characterID"`
+	UserCharacterID string `json:"userCharacterID"`
+	CharacterID     string `json:"characterID"`
 	Name            string `json:"name"`
 }
 type UserHoldCharacters []UserHoldCharacter
@@ -54,9 +54,9 @@ func (hcas *UsersCharactersApplicationService) Hold(token string) (*UserHoldChar
 		id := (*ids)[i]
 
 		var userHoldCharacter UserHoldCharacter
-		userHoldCharacter.UserCharacterId = strconv.Itoa(*id)
-		intCharacterId := character.GetId()
-		userHoldCharacter.CharacterId = strconv.Itoa(int(intCharacterId))
+		userHoldCharacter.UserCharacterID = strconv.Itoa(*id)
+		intCharacterID := character.GetId()
+		userHoldCharacter.CharacterID = strconv.Itoa(int(intCharacterID))
 		userHoldCharacter.Name = string(character.GetName())
 		userHoldCharacters = append(userHoldCharacters, userHoldCharacter)
 	}
