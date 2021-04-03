@@ -27,7 +27,6 @@ func (api *GameAPI) UserHoldCharacterList(w http.ResponseWriter, r *http.Request
 	}
 
 	w.Header().Set("characters", string(stringCharacters))
-	w.WriteHeader(http.StatusOK)
 
 	return nil
 }
@@ -35,6 +34,9 @@ func (api *GameAPI) UserHoldCharacterList(w http.ResponseWriter, r *http.Request
 func (api *GameAPI) UserHoldCharacterListHandler(w http.ResponseWriter, r *http.Request) {
 	err := api.UserHoldCharacterList(w, r)
 	if err != nil {
-		// log
+		// statusコードを設定
+		// ログをはく
+		return
 	}
+	w.WriteHeader(http.StatusOK)
 }

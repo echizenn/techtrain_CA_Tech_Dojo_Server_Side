@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"io"
-	"log"
 	"net/http"
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/application"
@@ -52,7 +51,6 @@ func (api *GameAPI) GachaDraw(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	w.Header().Set("results", string(stringResults))
-	w.WriteHeader(http.StatusOK)
 
 	return nil
 }
@@ -60,6 +58,9 @@ func (api *GameAPI) GachaDraw(w http.ResponseWriter, r *http.Request) error {
 func (api *GameAPI) GachaDrawHandler(w http.ResponseWriter, r *http.Request) {
 	err := api.GachaDraw(w, r)
 	if err != nil {
-		log.Fatal(err)
+		// statusコードを設定
+		// ログをはく
+		return
 	}
+	w.WriteHeader(http.StatusOK)
 }

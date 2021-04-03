@@ -35,7 +35,6 @@ func (api *GameAPI) CreateUser(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	w.Header().Set("token", *token)
-	w.WriteHeader(http.StatusOK)
 
 	return nil
 }
@@ -43,8 +42,11 @@ func (api *GameAPI) CreateUser(w http.ResponseWriter, r *http.Request) error {
 func (api *GameAPI) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 	err := api.CreateUser(w, r)
 	if err != nil {
-		// log
+		// statusコードを設定
+		// ログをはく
+		return
 	}
+	w.WriteHeader(http.StatusOK)
 }
 
 func (api *GameAPI) GetUser(w http.ResponseWriter, r *http.Request) error {
@@ -63,7 +65,6 @@ func (api *GameAPI) GetUser(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	w.Header().Set("name", *name)
-	w.WriteHeader(http.StatusOK)
 
 	return nil
 }
@@ -71,8 +72,11 @@ func (api *GameAPI) GetUser(w http.ResponseWriter, r *http.Request) error {
 func (api *GameAPI) GetUserHandler(w http.ResponseWriter, r *http.Request) {
 	err := api.GetUser(w, r)
 	if err != nil {
-		// log
+		// statusコードを設定
+		// ログをはく
+		return
 	}
+	w.WriteHeader(http.StatusOK)
 }
 
 type updateUserJson struct {
@@ -105,14 +109,15 @@ func (api *GameAPI) UpdateUser(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
-	w.WriteHeader(http.StatusOK)
-
 	return nil
 }
 
 func (api *GameAPI) UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
 	err := api.UpdateUser(w, r)
 	if err != nil {
-		// log
+		// statusコードを設定
+		// ログをはく
+		return
 	}
+	w.WriteHeader(http.StatusOK)
 }
