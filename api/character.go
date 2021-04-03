@@ -2,16 +2,15 @@ package api
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 )
 
-func (api *GameAPI) UserHoldCharacterList(w http.ResponseWriter, r *http.Request) {
+func (api *GameAPI) UserHoldCharacterList(w http.ResponseWriter, r *http.Request) error {
 	// 確認が重複になるのでいらない気もする
 	if r.Method != http.MethodGet {
 		w.WriteHeader(http.StatusMethodNotAllowed) // 405
 		w.Write([]byte("GETだけです。"))
-		return
+		return nil
 	}
 
 	header := r.Header
@@ -19,14 +18,23 @@ func (api *GameAPI) UserHoldCharacterList(w http.ResponseWriter, r *http.Request
 
 	userHoldCharacters, err := api.ucas.Hold(token)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	stringCharacters, err := json.Marshal(userHoldCharacters)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	w.Header().Set("characters", string(stringCharacters))
 	w.WriteHeader(http.StatusOK)
+
+	return nil
+}
+
+func (api *GameAPI) UserHoldCharacterListHandler(w http.ResponseWriter, r *http.Request) {
+	err := api.UserHoldCharacterList(w, r)
+	if err != nil {
+		// log
+	}
 }

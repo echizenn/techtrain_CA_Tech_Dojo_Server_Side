@@ -14,11 +14,11 @@ type gachaDrawJson struct {
 	Times int `json:"times"`
 }
 
-func (api *GameAPI) GachaDraw(w http.ResponseWriter, r *http.Request) {
+func (api *GameAPI) GachaDraw(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusMethodNotAllowed) // 405
 		w.Write([]byte("POSTだけです。"))
-		return
+		return nil
 	}
 
 	header := r.Header
@@ -40,7 +40,7 @@ func (api *GameAPI) GachaDraw(w http.ResponseWriter, r *http.Request) {
 	for i := 0; i < times; i++ {
 		gachaDrawResult, err := api.gas.Draw(token)
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
 
 		results = append(results, *gachaDrawResult)
@@ -48,9 +48,18 @@ func (api *GameAPI) GachaDraw(w http.ResponseWriter, r *http.Request) {
 
 	stringResults, err := json.Marshal(results)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	w.Header().Set("results", string(stringResults))
 	w.WriteHeader(http.StatusOK)
+
+	return nil
+}
+
+func (api *GameAPI) GachaDrawHandler(w http.ResponseWriter, r *http.Request) {
+	err := api.GachaDraw(w, r)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
