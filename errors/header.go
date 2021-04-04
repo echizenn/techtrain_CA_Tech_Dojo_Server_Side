@@ -2,18 +2,16 @@ package errors
 
 import (
 	"net/http"
-
-	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/log"
 )
 
 var NoTokenError = &BaseError{
 	StatusCode: http.StatusBadRequest,
-	Level:      log.Info,
+	Level:      Info,
 	Msg:        "tokenがありません",
 }
 
 var MethodNotAllowedError = &BaseError{
 	StatusCode: http.StatusMethodNotAllowed,
-	Level:      log.Info,
+	Level:      Info,
 	Msg:        "そのmethodは存在しません。",
 }

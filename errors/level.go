@@ -1,4 +1,4 @@
-package log
+package errors
 
 type Level string
 

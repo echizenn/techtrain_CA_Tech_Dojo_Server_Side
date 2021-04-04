@@ -7,7 +7,6 @@ import (
 	"golang.org/x/xerrors"
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/errors"
-	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/log"
 )
 
 type createUserJson struct {
@@ -39,7 +38,7 @@ func (api *GameAPI) CreateUser(w http.ResponseWriter, r *http.Request) error {
 func (api *GameAPI) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 	err := api.CreateUser(w, r)
 	if err != nil {
-		log.Emit(err)
+		errors.EmitLog(err)
 
 		var baseError *errors.BaseError
 		if xerrors.As(err, &baseError) {
@@ -76,7 +75,7 @@ func (api *GameAPI) GetUser(w http.ResponseWriter, r *http.Request) error {
 func (api *GameAPI) GetUserHandler(w http.ResponseWriter, r *http.Request) {
 	err := api.GetUser(w, r)
 	if err != nil {
-		log.Emit(err)
+		errors.EmitLog(err)
 
 		var baseError *errors.BaseError
 		if xerrors.As(err, &baseError) {
@@ -122,7 +121,7 @@ func (api *GameAPI) UpdateUser(w http.ResponseWriter, r *http.Request) error {
 func (api *GameAPI) UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
 	err := api.UpdateUser(w, r)
 	if err != nil {
-		log.Emit(err)
+		errors.EmitLog(err)
 
 		var baseError *errors.BaseError
 		if xerrors.As(err, &baseError) {

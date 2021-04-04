@@ -7,7 +7,6 @@ import (
 	"golang.org/x/xerrors"
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/errors"
-	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/log"
 )
 
 func (api *GameAPI) UserHoldCharacterList(w http.ResponseWriter, r *http.Request) error {
@@ -39,7 +38,7 @@ func (api *GameAPI) UserHoldCharacterList(w http.ResponseWriter, r *http.Request
 func (api *GameAPI) UserHoldCharacterListHandler(w http.ResponseWriter, r *http.Request) {
 	err := api.UserHoldCharacterList(w, r)
 	if err != nil {
-		log.Emit(err)
+		errors.EmitLog(err)
 
 		var baseError *errors.BaseError
 		if xerrors.As(err, &baseError) {
