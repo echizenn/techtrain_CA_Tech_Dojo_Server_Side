@@ -2,6 +2,8 @@ package errors
 
 import (
 	"fmt"
+
+	"golang.org/x/xerrors"
 )
 
 type BaseError struct {
@@ -15,5 +17,23 @@ func (e BaseError) Error() string {
 }
 
 func EmitLog(err error) {
-	return
+	var baseError *BaseError
+	if xerrors.As(err, &baseError) {
+		switch baseError.Level {
+		case Debug:
+			// Debug
+		case Info:
+			// Info
+		case Warn:
+			// Warn
+		case Error:
+			// Error
+		case DPanic:
+			// DPanic
+		case Panic:
+			// Panic
+		case Fatal:
+			// Fatal
+		}
+	}
 }
