@@ -8,6 +8,7 @@ import (
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/application"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/errors"
+	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/log"
 )
 
 type gachaDrawJson struct {
@@ -56,8 +57,14 @@ func (api *GameAPI) GachaDraw(w http.ResponseWriter, r *http.Request) error {
 func (api *GameAPI) GachaDrawHandler(w http.ResponseWriter, r *http.Request) {
 	err := api.GachaDraw(w, r)
 	if err != nil {
-		// statusコードを設定
-		// ログをはく
+		log.Emit(err)
+
+		var baseError *errors.BaseError
+		if xerrors.As(err, &baseError) {
+			w.WriteHeader(baseError.StatusCode)
+		} else {
+			w.WriteHeader(http.StatusInternalServerError)
+		}
 		return
 	}
 	w.WriteHeader(http.StatusOK)
