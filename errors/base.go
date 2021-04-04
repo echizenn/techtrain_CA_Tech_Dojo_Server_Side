@@ -3,6 +3,7 @@ package errors
 import (
 	"fmt"
 
+	"go.uber.org/zap"
 	"golang.org/x/xerrors"
 )
 
@@ -21,7 +22,8 @@ func EmitLog(err error) {
 	if xerrors.As(err, &baseError) {
 		switch baseError.Level {
 		case Debug:
-			// Debug
+			logger, _ := zap.NewDevelopment()
+			logger.Info("Hello zap", zap.String("key", "value"), zap.String("now", "2021-04-04"))
 		case Info:
 			// Info
 		case Warn:
