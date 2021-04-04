@@ -21,9 +21,9 @@ func (uts *UserTokenService) Create() (*domain.UserToken, error) {
 	// ランダム生成
 	u, err := uuid.NewRandom()
 	if err != nil {
-		UuidError := errors.UuidError
-		UuidError.Msg = err.Error()
-		return nil, UuidError
+		UUIDError := errors.UUIDError
+		UUIDError.Msg = err.Error()
+		return nil, UUIDError
 	}
 	stringToken := u.String()
 	token, err := domain.NewUserToken(stringToken)
@@ -36,9 +36,9 @@ func (uts *UserTokenService) Create() (*domain.UserToken, error) {
 		// ランダム生成
 		u, err := uuid.NewRandom()
 		if err != nil {
-			UuidError := errors.UuidError
-			UuidError.Msg = err.Error()
-			return nil, UuidError
+			UUIDError := errors.UUIDError
+			UUIDError.Msg = err.Error()
+			return nil, UUIDError
 		}
 		stringToken := u.String()
 		token, err = domain.NewUserToken(stringToken)

@@ -6,7 +6,7 @@ import (
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/log"
 )
 
-var UuidError = &BaseError{
+var UUIDError = &BaseError{
 	StatusCode: http.StatusInternalServerError,
 	Level:      log.Error,
 	Msg:        "uuidでエラーが発生しました",
