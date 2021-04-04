@@ -30,22 +30,22 @@ type GachaDrawResult struct {
 func (gachaApplicationService *GachaApplicationService) Draw(token string) (*GachaDrawResult, error) {
 	targetToken, err := domain.NewUserToken(token)
 	if err != nil {
-		return nil, xerrors.Errorf("error: %w", err)
+		return nil, xerrors.Errorf("NewUserToken func error: %w", err)
 	}
 
 	user, err := gachaApplicationService.userRepository.FindByToken(targetToken)
 	if err != nil {
-		return nil, xerrors.Errorf("error: %w", err)
+		return nil, xerrors.Errorf("userRepository.FindByToken func error: %w", err)
 	}
 
 	character, err := gachaApplicationService.gachaService.Draw()
 	if err != nil {
-		return nil, xerrors.Errorf("error: %w", err)
+		return nil, xerrors.Errorf("gachaService.Draw func error: %w", err)
 	}
 
 	err = gachaApplicationService.usersCharactersRepository.Insert(user, character)
 	if err != nil {
-		return nil, xerrors.Errorf("error: %w", err)
+		return nil, xerrors.Errorf("usersCharactersRepository.Insert func error: %w", err)
 	}
 
 	characterID := character.GetID()

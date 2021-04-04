@@ -30,17 +30,17 @@ type UserHoldCharacters []UserHoldCharacter
 func (hcas *UsersCharactersApplicationService) Hold(token string) (*UserHoldCharacters, error) {
 	targetToken, err := domain.NewUserToken(token)
 	if err != nil {
-		return nil, xerrors.Errorf("error: %w", err)
+		return nil, xerrors.Errorf("NewUserToken func error: %w", err)
 	}
 
 	user, err := hcas.userRepository.FindByToken(targetToken)
 	if err != nil {
-		return nil, xerrors.Errorf("error: %w", err)
+		return nil, xerrors.Errorf("userRepository.FindByToken func error: %w", err)
 	}
 
 	characters, ids, err := hcas.usersCharactersRepository.FindByUser(user)
 	if err != nil {
-		return nil, xerrors.Errorf("error: %w", err)
+		return nil, xerrors.Errorf("usersCharactersRepository.FindByUser func error: %w", err)
 	}
 
 	for _, id := range *ids {
