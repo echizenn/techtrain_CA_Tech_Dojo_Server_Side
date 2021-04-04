@@ -6,6 +6,7 @@ import (
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/repository"
+	"golang.org/x/xerrors"
 )
 
 type UsersCharactersApplicationService struct {
@@ -20,8 +21,8 @@ func NewUsersCharactersApplicationService(
 }
 
 type UserHoldCharacter struct {
-	UserCharacterId string `json:"userCharacterID"`
-	CharacterId     string `json:"characterID"`
+	UserCharacterID string `json:"userCharacterID"`
+	CharacterID     string `json:"characterID"`
 	Name            string `json:"name"`
 }
 type UserHoldCharacters []UserHoldCharacter
@@ -29,17 +30,17 @@ type UserHoldCharacters []UserHoldCharacter
 func (hcas *UsersCharactersApplicationService) Hold(token string) (*UserHoldCharacters, error) {
 	targetToken, err := domain.NewUserToken(token)
 	if err != nil {
-		return nil, err
+		return nil, xerrors.Errorf("NewUserToken func error: %w", err)
 	}
 
 	user, err := hcas.userRepository.FindByToken(targetToken)
 	if err != nil {
-		return nil, err
+		return nil, xerrors.Errorf("userRepository.FindByToken func error: %w", err)
 	}
 
 	characters, ids, err := hcas.usersCharactersRepository.FindByUser(user)
 	if err != nil {
-		return nil, err
+		return nil, xerrors.Errorf("usersCharactersRepository.FindByUser func error: %w", err)
 	}
 
 	for _, id := range *ids {
@@ -53,9 +54,9 @@ func (hcas *UsersCharactersApplicationService) Hold(token string) (*UserHoldChar
 		id := (*ids)[i]
 
 		var userHoldCharacter UserHoldCharacter
-		userHoldCharacter.UserCharacterId = strconv.Itoa(*id)
-		intCharacterId := character.GetId()
-		userHoldCharacter.CharacterId = strconv.Itoa(int(intCharacterId))
+		userHoldCharacter.UserCharacterID = strconv.Itoa(*id)
+		intCharacterID := character.GetID()
+		userHoldCharacter.CharacterID = strconv.Itoa(int(intCharacterID))
 		userHoldCharacter.Name = string(character.GetName())
 		userHoldCharacters = append(userHoldCharacters, userHoldCharacter)
 	}

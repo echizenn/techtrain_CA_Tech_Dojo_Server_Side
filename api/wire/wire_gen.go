@@ -17,9 +17,9 @@ import (
 
 func InitGameAPI(db *sql.DB) api.GameAPI {
 	iUserRepository := infrastructure.NewUserRepository(db)
-	userIdService := service.NewUserIdService(iUserRepository)
+	userIDService := service.NewUserIDService(iUserRepository)
 	userTokenService := service.NewUserTokenService(iUserRepository)
-	userApplicationService := application.NewUserApplicationService(iUserRepository, userIdService, userTokenService)
+	userApplicationService := application.NewUserApplicationService(iUserRepository, userIDService, userTokenService)
 	iCharacterRepository := infrastructure.NewCharacterRepository(db)
 	iUsersCharactersRepository := infrastructure.NewUsersCharactersRepository(iCharacterRepository, db)
 	gachaService := service.NewGachaService(iCharacterRepository)

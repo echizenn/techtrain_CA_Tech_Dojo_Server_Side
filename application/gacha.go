@@ -6,6 +6,7 @@ import (
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/repository"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/service"
+	"golang.org/x/xerrors"
 )
 
 type GachaApplicationService struct {
@@ -22,34 +23,37 @@ func NewGachaApplicationService(
 }
 
 type GachaDrawResult struct {
-	CharacterId string `json:"characterID"`
+	CharacterID string `json:"characterID"`
 	Name        string `json:"name"`
 }
 
-func (gas *GachaApplicationService) Draw(token string) (*GachaDrawResult, error) {
+func (gachaApplicationService *GachaApplicationService) Draw(token string) (*GachaDrawResult, error) {
 	targetToken, err := domain.NewUserToken(token)
 	if err != nil {
-		return nil, err
+		return nil, xerrors.Errorf("NewUserToken func error: %w", err)
 	}
 
-	user, err := gas.userRepository.FindByToken(targetToken)
+	user, err := gachaApplicationService.userRepository.FindByToken(targetToken)
 	if err != nil {
-		return nil, err
+		return nil, xerrors.Errorf("userRepository.FindByToken func error: %w", err)
 	}
 
-	character := gas.gachaService.Draw()
-
-	err = gas.usersCharactersRepository.Insert(user, character)
+	character, err := gachaApplicationService.gachaService.Draw()
 	if err != nil {
-		return nil, err
+		return nil, xerrors.Errorf("gachaService.Draw func error: %w", err)
 	}
 
-	characterId := character.GetId()
-	intCharacterId := int(characterId)
-	stringCharacterId := strconv.Itoa(intCharacterId)
+	err = gachaApplicationService.usersCharactersRepository.Insert(user, character)
+	if err != nil {
+		return nil, xerrors.Errorf("usersCharactersRepository.Insert func error: %w", err)
+	}
+
+	characterID := character.GetID()
+	intCharacterID := int(characterID)
+	stringCharacterID := strconv.Itoa(intCharacterID)
 
 	characterName := character.GetName()
 	stringCharacterName := string(characterName)
 
-	return &GachaDrawResult{stringCharacterId, stringCharacterName}, nil
+	return &GachaDrawResult{stringCharacterID, stringCharacterName}, nil
 }

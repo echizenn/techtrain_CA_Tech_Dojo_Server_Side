@@ -8,5 +8,5 @@ type IUserRepository interface {
 	Insert(user *domain.User) error
 	Update(user *domain.User) error
 	FindByToken(token *domain.UserToken) (*domain.User, error)
-	GetMaxId() (*domain.UserId, error)
+	GetMaxID() (*domain.UserID, error)
 }

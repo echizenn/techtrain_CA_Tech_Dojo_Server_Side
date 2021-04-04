@@ -5,6 +5,6 @@ import (
 )
 
 type ICharacterRepository interface {
-	FindById(id *domain.CharacterId) (*domain.Character, error)
-	GetMaxId() (*domain.CharacterId, error)
+	FindByID(id *domain.CharacterID) (*domain.Character, error)
+	GetMaxID() (*domain.CharacterID, error)
 }

@@ -2,31 +2,51 @@ package api
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
+
+	"golang.org/x/xerrors"
+
+	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/errors"
 )
 
-func (api *GameAPI) UserHoldCharacterList(w http.ResponseWriter, r *http.Request) {
-	// 確認が重複になるのでいらない気もする
+func (api *GameAPI) UserHoldCharacterList(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodGet {
-		w.WriteHeader(http.StatusMethodNotAllowed) // 405
-		w.Write([]byte("GETだけです。"))
-		return
+		return errors.MethodNotAllowedError
 	}
 
 	header := r.Header
-	token := header["X-Token"][0] // なんで大文字になる？、0って明示して大丈夫？
-
-	userHoldCharacters, err := api.ucas.Hold(token)
-	if err != nil {
-		log.Fatal(err)
+	token := header.Get("X-Token")
+	if token == "" {
+		return errors.NoTokenError
 	}
 
-	stringCharacters, err := json.Marshal(userHoldCharacters)
+	userHoldCharacters, err := api.usersCharactersApplicationService.Hold(token)
 	if err != nil {
-		log.Fatal(err)
+		return xerrors.Errorf("usersCharactersApplicationService.Hold func error: %w", err)
 	}
 
-	w.Header().Set("characters", string(stringCharacters))
+	marshalCharacters, err := json.Marshal(userHoldCharacters)
+	if err != nil {
+		return errors.JsonMarshalError
+	}
+
+	w.Header().Set("characters", string(marshalCharacters))
+
+	return nil
+}
+
+func (api *GameAPI) UserHoldCharacterListHandler(w http.ResponseWriter, r *http.Request) {
+	err := api.UserHoldCharacterList(w, r)
+	if err != nil {
+		errors.EmitLog(err)
+
+		var baseError *errors.BaseError
+		if xerrors.As(err, &baseError) {
+			w.WriteHeader(baseError.StatusCode)
+		} else {
+			w.WriteHeader(http.StatusInternalServerError)
+		}
+		return
+	}
 	w.WriteHeader(http.StatusOK)
 }

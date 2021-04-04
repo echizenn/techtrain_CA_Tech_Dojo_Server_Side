@@ -1,14 +1,16 @@
 package domain
 
-import "errors"
+import (
+	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/errors"
+)
 
 type Character struct {
-	id     CharacterId
+	id     CharacterID
 	name   CharacterName
 	rarity CharacterRarity
 }
 
-func (c *Character) GetId() CharacterId {
+func (c *Character) GetID() CharacterID {
 	return c.id
 }
 
@@ -20,25 +22,25 @@ func (c *Character) GetRarity() CharacterRarity {
 	return c.rarity
 }
 
-func NewCharacter(id CharacterId, name CharacterName, rarity CharacterRarity) Character {
+func NewCharacter(id CharacterID, name CharacterName, rarity CharacterRarity) Character {
 	return Character{id, name, rarity}
 }
 
-type CharacterId int
+type CharacterID int
 type CharacterName string
 type CharacterRarity int
 
-func NewCharacterId(value int) (*CharacterId, error) {
+func NewCharacterID(value int) (*CharacterID, error) {
 	if value < 1 {
-		return nil, errors.New("idは1以上の整数である必要があります。")
+		return nil, errors.CharacterIDError
 	}
-	id := CharacterId(value)
+	id := CharacterID(value)
 	return &id, nil
 }
 
 func NewCharacterName(value string) (*CharacterName, error) {
 	if len(value) < 1 {
-		return nil, errors.New(("nameは1文字以上である必要があります。"))
+		return nil, errors.CharacterNameError
 	}
 	name := CharacterName(value)
 	return &name, nil
@@ -46,10 +48,10 @@ func NewCharacterName(value string) (*CharacterName, error) {
 
 func NewCharacterRarity(value int) (*CharacterRarity, error) {
 	if value < 1 {
-		return nil, errors.New("rarityは1以上の整数である必要があります。")
+		return nil, errors.CharacterRarityError
 	}
 	if 100000 <= value {
-		return nil, errors.New("rarityは100000以下の整数である必要があります。")
+		return nil, errors.CharacterRarityError
 	}
 	id := CharacterRarity(value)
 	return &id, nil

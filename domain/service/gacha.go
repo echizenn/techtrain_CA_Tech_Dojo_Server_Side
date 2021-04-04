@@ -1,11 +1,11 @@
 package service
 
 import (
-	"log"
 	"math/rand"
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/repository"
+	"golang.org/x/xerrors"
 )
 
 type GachaService struct {
@@ -16,24 +16,24 @@ func NewGachaService(characterRepository repository.ICharacterRepository) GachaS
 	return GachaService{characterRepository}
 }
 
-func (gs *GachaService) Draw() *domain.Character {
-	maxId, err := gs.characterRepository.GetMaxId()
+func (gs *GachaService) Draw() (*domain.Character, error) {
+	maxID, err := gs.characterRepository.GetMaxID()
 	if err != nil {
-		log.Fatal(err)
+		return nil, xerrors.Errorf("characterRepository.GetMaxID func error: %w", err)
 	}
-	var intCharacterId int = 0
-	for intCharacterId == 0 {
+	var intCharacterID int = 0
+	for intCharacterID == 0 {
 		// rand.Intnは[0, n)でランダムな整数返す。[1,n]で返して欲しいので+1
 		// ガチャする候補のキャラクターを選んでいる
-		intRandomCharacterId := rand.Intn(int(*maxId)) + 1
-		randomCharacterId, err := domain.NewCharacterId(intRandomCharacterId)
+		intRandomCharacterID := rand.Intn(int(*maxID)) + 1
+		randomCharacterID, err := domain.NewCharacterID(intRandomCharacterID)
 		if err != nil {
-			log.Fatal(err)
+			return nil, xerrors.Errorf("NewCharacterID func error: %w", err)
 		}
-		randomCharacter, err := gs.characterRepository.FindById(randomCharacterId)
-		// 長期的にはIdに欠番があってもガチャ回るようにしたい
+		randomCharacter, err := gs.characterRepository.FindByID(randomCharacterID)
+		// 長期的にはIDに欠番があってもガチャ回るようにしたい
 		if err != nil {
-			log.Fatal(err)
+			return nil, xerrors.Errorf("characterRepository.FindByID func error: %w", err)
 		}
 		rarity := randomCharacter.GetRarity()
 		intRarity := int(rarity)
@@ -42,20 +42,18 @@ func (gs *GachaService) Draw() *domain.Character {
 		// その数字が0ならそのキャラクター獲得とする
 		// 0でなければ獲得失敗でガチャを再び繰り返す
 		// このfor文は1回のガチャで10**5回とか呼ばれると思われる
-		// sql呼びすぎな気もする
-		// 計算量削減したいならあらかじめ全てのキャラクターのレア度から一発でガチャができるようにする
 		result := rand.Intn(intRarity)
 		if result == 0 {
-			intCharacterId = intRandomCharacterId
+			intCharacterID = intRandomCharacterID
 		}
 	}
-	characterId, err := domain.NewCharacterId(intCharacterId)
+	characterID, err := domain.NewCharacterID(intCharacterID)
 	if err != nil {
-		log.Fatal(err)
+		return nil, xerrors.Errorf("NewCharacterID func error: %w", err)
 	}
-	character, err := gs.characterRepository.FindById(characterId)
+	character, err := gs.characterRepository.FindByID(characterID)
 	if err != nil {
-		log.Fatal(err)
+		return nil, xerrors.Errorf("characterRepository.FindByID func error: %w", err)
 	}
-	return character
+	return character, nil
 }
