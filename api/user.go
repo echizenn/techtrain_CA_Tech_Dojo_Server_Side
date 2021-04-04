@@ -5,6 +5,8 @@ import (
 	"net/http"
 
 	"golang.org/x/xerrors"
+
+	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/errors"
 )
 
 type createUserJson struct {
@@ -53,7 +55,10 @@ func (api *GameAPI) GetUser(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	header := r.Header
-	stringToken := header["X-Token"][0] // なんで大文字になる？
+	stringToken := header.Get("X-Token")
+	if stringToken == "" {
+		return errors.NoTokenError
+	}
 
 	name, err := api.userApplicationService.GetName(stringToken)
 	if err != nil {
@@ -87,7 +92,10 @@ func (api *GameAPI) UpdateUser(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	header := r.Header
-	token := header["X-Token"][0] // なんで大文字になる？、0って明示して大丈夫？
+	token := header.Get("X-Token")
+	if token == "" {
+		return errors.NoTokenError
+	}
 
 	var uuj updateUserJson
 	body := r.Body

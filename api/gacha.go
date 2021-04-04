@@ -7,6 +7,7 @@ import (
 	"golang.org/x/xerrors"
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/application"
+	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/errors"
 )
 
 type gachaDrawJson struct {
@@ -21,7 +22,10 @@ func (api *GameAPI) GachaDraw(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	header := r.Header
-	token := header["X-Token"][0] // なんで大文字になる？、0って明示して大丈夫？
+	token := header.Get("X-Token")
+	if token == "" {
+		return errors.NoTokenError
+	}
 
 	var gdj gachaDrawJson
 	body := r.Body
