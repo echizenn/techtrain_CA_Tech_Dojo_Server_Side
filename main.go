@@ -20,7 +20,7 @@ func main() {
 
 	mux := Server(gameAPI)
 	if err := http.ListenAndServe(":8088", mux); err != nil {
-		panic(err)
+		// listen and serveに失敗した時の処理を書く
 	}
 }
 
