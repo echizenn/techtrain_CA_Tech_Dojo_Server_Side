@@ -5,6 +5,7 @@ import (
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/repository"
+	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/errors"
 	_ "github.com/go-sql-driver/mysql"
 	"golang.org/x/xerrors"
 )
@@ -21,12 +22,16 @@ func NewUsersCharactersRepository(cr repository.ICharacterRepository, db *sql.DB
 func (ucr *usersCharactersRepository) Insert(user *domain.User, character *domain.Character) error {
 	rows, err := ucr.db.Prepare("INSERT INTO users_characters (user_id, character_id) VALUES (?, ?)")
 	if err != nil {
-		return xerrors.Errorf("error: %w", err)
+		DBError := errors.DBError
+		DBError.Msg = err.Error()
+		return DBError
 	}
 
 	_, err = rows.Exec(user.GetID(), character.GetID())
 	if err != nil {
-		return xerrors.Errorf("error: %w", err)
+		DBError := errors.DBError
+		DBError.Msg = err.Error()
+		return DBError
 	}
 
 	return nil
@@ -43,21 +48,25 @@ func (ucr *usersCharactersRepository) FindByUser(user *domain.User) (*[]*domain.
 
 	rows, err := ucr.db.Query("SELECT id, character_id FROM users_characters WHERE user_id=?", userID)
 	if err != nil {
-		return nil, nil, xerrors.Errorf("error: %w", err)
+		DBError := errors.DBError
+		DBError.Msg = err.Error()
+		return nil, nil, DBError
 	}
 
 	for rows.Next() {
 		err = rows.Scan(&intID, &intCharacterID)
 		if err != nil {
-			return nil, nil, xerrors.Errorf("error: %w", err)
+			DBError := errors.DBError
+			DBError.Msg = err.Error()
+			return nil, nil, DBError
 		}
 		characterID, err := domain.NewCharacterID(intCharacterID)
 		if err != nil {
-			return nil, nil, xerrors.Errorf("error: %w", err)
+			return nil, nil, xerrors.Errorf("NewCharacterID func error: %w", err)
 		}
 		character, err := ucr.cr.FindByID(characterID)
 		if err != nil {
-			return nil, nil, xerrors.Errorf("error: %w", err)
+			return nil, nil, xerrors.Errorf("characterRepository.FindByID func error: %w", err)
 		}
 		id := int(intID)
 		characters = append(characters, character)
