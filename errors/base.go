@@ -2,6 +2,7 @@ package errors
 
 import (
 	"fmt"
+	"time"
 
 	"go.uber.org/zap"
 	"golang.org/x/xerrors"
@@ -23,19 +24,25 @@ func EmitLog(err error) {
 		switch baseError.Level {
 		case Debug:
 			logger, _ := zap.NewDevelopment()
-			logger.Info("Hello zap", zap.String("key", "value"), zap.String("now", "2021-04-04"))
+			logger.Debug("zap", zap.String("msg", err.Error()), zap.Time("now", time.Now()))
 		case Info:
-			// Info
+			logger, _ := zap.NewDevelopment()
+			logger.Info("zap", zap.String("msg", err.Error()), zap.Time("now", time.Now()))
 		case Warn:
-			// Warn
+			logger, _ := zap.NewDevelopment()
+			logger.Warn("zap", zap.String("msg", err.Error()), zap.Time("now", time.Now()))
 		case Error:
-			// Error
+			logger, _ := zap.NewDevelopment()
+			logger.Error("zap", zap.String("msg", err.Error()), zap.Time("now", time.Now()))
 		case DPanic:
-			// DPanic
+			logger, _ := zap.NewDevelopment()
+			logger.DPanic("zap", zap.String("msg", err.Error()), zap.Time("now", time.Now()))
 		case Panic:
-			// Panic
+			logger, _ := zap.NewDevelopment()
+			logger.Panic("zap", zap.String("msg", err.Error()), zap.Time("now", time.Now()))
 		case Fatal:
-			// Fatal
+			logger, _ := zap.NewDevelopment()
+			logger.Fatal("zap", zap.String("msg", err.Error()), zap.Time("now", time.Now()))
 		}
 	}
 }

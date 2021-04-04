@@ -2,6 +2,9 @@ package main
 
 import (
 	"net/http"
+	"time"
+
+	"go.uber.org/zap"
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/api"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/api/wire"
@@ -13,14 +16,16 @@ func main() {
 	db, err := mysql.CreateSQLInstance()
 	defer db.Close()
 	if err != nil {
-		// dbインスタンスが立ち上がらなかった時の処理を書く
+		logger, _ := zap.NewDevelopment()
+		logger.Error("dbインスタンス作成失敗", zap.String("msg", err.Error()), zap.Time("now", time.Now()))
 	}
 
 	gameAPI := wire.InitGameAPI(db)
 
 	mux := Server(gameAPI)
 	if err := http.ListenAndServe(":8088", mux); err != nil {
-		// listen and serveに失敗した時の処理を書く
+		logger, _ := zap.NewDevelopment()
+		logger.Error("api立ち上げ失敗", zap.String("msg", err.Error()), zap.Time("now", time.Now()))
 	}
 }
 
