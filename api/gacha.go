@@ -37,7 +37,7 @@ func (api *GameAPI) GachaDraw(w http.ResponseWriter, r *http.Request) error {
 	var results []application.GachaDrawResult
 
 	for i := 0; i < times; i++ {
-		gachaDrawResult, err := api.gas.Draw(token)
+		gachaDrawResult, err := api.gachaApplicationService.Draw(token)
 		if err != nil {
 			return err
 		}

@@ -27,23 +27,23 @@ type GachaDrawResult struct {
 	Name        string `json:"name"`
 }
 
-func (gas *GachaApplicationService) Draw(token string) (*GachaDrawResult, error) {
+func (gachaApplicationService *GachaApplicationService) Draw(token string) (*GachaDrawResult, error) {
 	targetToken, err := domain.NewUserToken(token)
 	if err != nil {
 		return nil, xerrors.Errorf("error: %w", err)
 	}
 
-	user, err := gas.userRepository.FindByToken(targetToken)
+	user, err := gachaApplicationService.userRepository.FindByToken(targetToken)
 	if err != nil {
 		return nil, xerrors.Errorf("error: %w", err)
 	}
 
-	character, err := gas.gachaService.Draw()
+	character, err := gachaApplicationService.gachaService.Draw()
 	if err != nil {
 		return nil, xerrors.Errorf("error: %w", err)
 	}
 
-	err = gas.usersCharactersRepository.Insert(user, character)
+	err = gachaApplicationService.usersCharactersRepository.Insert(user, character)
 	if err != nil {
 		return nil, xerrors.Errorf("error: %w", err)
 	}

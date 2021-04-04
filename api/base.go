@@ -6,14 +6,15 @@ import (
 )
 
 type GameAPI struct {
-	uas  application.UserApplicationService
-	gas  application.GachaApplicationService
-	ucas application.UsersCharactersApplicationService
+	userApplicationService            application.UserApplicationService
+	gachaApplicationService           application.GachaApplicationService
+	usersCharactersApplicationService application.UsersCharactersApplicationService
 }
 
-func NewGameAPI(uas application.UserApplicationService,
-	gas application.GachaApplicationService,
-	ucas application.UsersCharactersApplicationService,
+func NewGameAPI(
+	userApplicationService application.UserApplicationService,
+	gachaApplicationService application.GachaApplicationService,
+	usersCharactersApplicationService application.UsersCharactersApplicationService,
 ) GameAPI {
-	return GameAPI{uas, gas, ucas}
+	return GameAPI{userApplicationService, gachaApplicationService, usersCharactersApplicationService}
 }

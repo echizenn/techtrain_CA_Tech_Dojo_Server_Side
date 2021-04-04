@@ -19,8 +19,8 @@ func NewUserApplicationService(userRepository repository.IUserRepository,
 	return UserApplicationService{userRepository, userIDService, userTokenService}
 }
 
-func (uas *UserApplicationService) Register(name string) (*string, error) {
-	userID, err := uas.userIDService.Create()
+func (userApplicationService *UserApplicationService) Register(name string) (*string, error) {
+	userID, err := userApplicationService.userIDService.Create()
 	if err != nil {
 		return nil, xerrors.Errorf("error: %w", err)
 	}
@@ -30,13 +30,13 @@ func (uas *UserApplicationService) Register(name string) (*string, error) {
 		return nil, xerrors.Errorf("error: %w", err)
 	}
 
-	userToken, err := uas.userTokenService.Create()
+	userToken, err := userApplicationService.userTokenService.Create()
 	if err != nil {
 		return nil, xerrors.Errorf("error: %w", err)
 	}
 
 	user := domain.NewUser(*userID, *userName, *userToken)
-	err = uas.userRepository.Insert(&user)
+	err = userApplicationService.userRepository.Insert(&user)
 	if err != nil {
 		return nil, xerrors.Errorf("error: %w", err)
 	}
@@ -44,13 +44,13 @@ func (uas *UserApplicationService) Register(name string) (*string, error) {
 	return &stringUserToken, nil
 }
 
-func (uas *UserApplicationService) GetName(token string) (*string, error) {
+func (userApplicationService *UserApplicationService) GetName(token string) (*string, error) {
 	targetToken, err := domain.NewUserToken(token)
 	if err != nil {
 		return nil, xerrors.Errorf("error: %w", err)
 	}
 
-	user, err := uas.userRepository.FindByToken(targetToken)
+	user, err := userApplicationService.userRepository.FindByToken(targetToken)
 	if err != nil {
 		return nil, xerrors.Errorf("error: %w", err)
 	}
@@ -60,12 +60,12 @@ func (uas *UserApplicationService) GetName(token string) (*string, error) {
 	return &stringName, nil
 }
 
-func (uas *UserApplicationService) Update(name string, token string) error {
+func (userApplicationService *UserApplicationService) Update(name string, token string) error {
 	userToken, err := domain.NewUserToken(token)
 	if err != nil {
 		return xerrors.Errorf("error: %w", err)
 	}
-	user, err := uas.userRepository.FindByToken(userToken)
+	user, err := userApplicationService.userRepository.FindByToken(userToken)
 	if err != nil {
 		return xerrors.Errorf("error: %w", err)
 	}
@@ -77,7 +77,7 @@ func (uas *UserApplicationService) Update(name string, token string) error {
 
 	newUser := user.SetName(*newName)
 
-	err = uas.userRepository.Update(newUser)
+	err = userApplicationService.userRepository.Update(newUser)
 	if err != nil {
 		return xerrors.Errorf("error: %w", err)
 	}

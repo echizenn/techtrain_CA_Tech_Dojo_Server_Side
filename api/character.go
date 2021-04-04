@@ -16,7 +16,7 @@ func (api *GameAPI) UserHoldCharacterList(w http.ResponseWriter, r *http.Request
 	header := r.Header
 	token := header["X-Token"][0] // なんで大文字になる？、0って明示して大丈夫？
 
-	userHoldCharacters, err := api.ucas.Hold(token)
+	userHoldCharacters, err := api.usersCharactersApplicationService.Hold(token)
 	if err != nil {
 		return err
 	}

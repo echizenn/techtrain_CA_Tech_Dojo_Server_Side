@@ -29,7 +29,7 @@ func (api *GameAPI) CreateUser(w http.ResponseWriter, r *http.Request) error {
 
 	name := cuj.Name
 
-	token, err := api.uas.Register(name)
+	token, err := api.userApplicationService.Register(name)
 	if err != nil {
 		return err
 	}
@@ -59,7 +59,7 @@ func (api *GameAPI) GetUser(w http.ResponseWriter, r *http.Request) error {
 	header := r.Header
 	stringToken := header["X-Token"][0] // なんで大文字になる？
 
-	name, err := api.uas.GetName(stringToken)
+	name, err := api.userApplicationService.GetName(stringToken)
 	if err != nil {
 		return err
 	}
@@ -104,7 +104,7 @@ func (api *GameAPI) UpdateUser(w http.ResponseWriter, r *http.Request) error {
 
 	name := uuj.Name
 
-	err := api.uas.Update(name, token)
+	err := api.userApplicationService.Update(name, token)
 	if err != nil {
 		return err
 	}
