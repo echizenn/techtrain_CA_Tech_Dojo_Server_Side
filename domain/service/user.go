@@ -26,16 +26,25 @@ func (uts *UserTokenService) Create() (*domain.UserToken, error) {
 		return nil, UuidError
 	}
 	stringToken := u.String()
-	token, _ := domain.NewUserToken(stringToken)
+	token, err := domain.NewUserToken(stringToken)
+	if err != nil {
+		return nil, xerrors.Errorf("NewUserToken func error: %w", err)
+	}
+
 	// トークンが衝突している場合は新しいトークン発行
 	for uts.Exists(*token) {
 		// ランダム生成
 		u, err := uuid.NewRandom()
 		if err != nil {
-			return nil, xerrors.Errorf("error: %w", err)
+			UuidError := errors.UuidError
+			UuidError.Msg = err.Error()
+			return nil, UuidError
 		}
 		stringToken := u.String()
-		token, _ = domain.NewUserToken(stringToken)
+		token, err = domain.NewUserToken(stringToken)
+		if err != nil {
+			return nil, xerrors.Errorf("NewUserToken func error: %w", err)
+		}
 	}
 	return token, nil
 }
@@ -43,7 +52,7 @@ func (uts *UserTokenService) Create() (*domain.UserToken, error) {
 func (uts *UserTokenService) Exists(token domain.UserToken) bool {
 	_, err := uts.userRepository.FindByToken(&token)
 	if err != nil {
-		// この処理いいか微妙(よくない、FindByTokenでない場合は""を返す、エラーはエラーで返す)
+		// この処理いいか微妙(よくない、FindByTokenで存在しない場合は""を返す、エラーはエラーで返す)
 		return false
 	}
 	return true
@@ -66,14 +75,14 @@ func (uis *UserIDService) Create() (*domain.UserID, error) {
 	if err != nil {
 		newID, err = domain.NewUserID(1)
 		if err != nil {
-			return nil, xerrors.Errorf("error: %w", err)
+			return nil, xerrors.Errorf("NewUserID func error: %w", err)
 		}
 		// 登録者いるとき
 	} else {
 		id := int(*maxUserID) + 1
 		newID, err = domain.NewUserID(id)
 		if err != nil {
-			return nil, xerrors.Errorf("error: %w", err)
+			return nil, xerrors.Errorf("NewUserID func error: %w", err)
 		}
 	}
 
