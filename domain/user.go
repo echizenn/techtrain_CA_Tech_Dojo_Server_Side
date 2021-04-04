@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"golang.org/x/xerrors"
+	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/errors"
 )
 
 type User struct {
@@ -37,7 +37,7 @@ type UserToken string
 
 func NewUserID(value int) (*UserID, error) {
 	if value < 1 {
-		return nil, xerrors.New("idは1以上の整数である必要があります。")
+		return nil, errors.UserIDError
 	}
 	id := UserID(value)
 	return &id, nil
@@ -45,7 +45,7 @@ func NewUserID(value int) (*UserID, error) {
 
 func NewUserName(value string) (*UserName, error) {
 	if len(value) < 1 {
-		return nil, xerrors.New("nameは1文字以上である必要があります。")
+		return nil, errors.UserNameError
 	}
 	name := UserName(value)
 	return &name, nil
@@ -53,7 +53,7 @@ func NewUserName(value string) (*UserName, error) {
 
 func NewUserToken(value string) (*UserToken, error) {
 	if len(value) < 1 {
-		return nil, xerrors.New("tokenは1文字以上である必要があります。")
+		return nil, errors.UserTokenError
 	}
 	token := UserToken(value)
 	return &token, nil

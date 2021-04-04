@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"golang.org/x/xerrors"
+	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/errors"
 )
 
 type Character struct {
@@ -32,7 +32,7 @@ type CharacterRarity int
 
 func NewCharacterID(value int) (*CharacterID, error) {
 	if value < 1 {
-		return nil, xerrors.New("idは1以上の整数である必要があります。")
+		return nil, errors.CharacterIDError
 	}
 	id := CharacterID(value)
 	return &id, nil
@@ -40,7 +40,7 @@ func NewCharacterID(value int) (*CharacterID, error) {
 
 func NewCharacterName(value string) (*CharacterName, error) {
 	if len(value) < 1 {
-		return nil, xerrors.New("nameは1文字以上である必要があります。")
+		return nil, errors.CharacterNameError
 	}
 	name := CharacterName(value)
 	return &name, nil
@@ -48,10 +48,10 @@ func NewCharacterName(value string) (*CharacterName, error) {
 
 func NewCharacterRarity(value int) (*CharacterRarity, error) {
 	if value < 1 {
-		return nil, xerrors.New("rarityは1以上の整数である必要があります。")
+		return nil, errors.CharacterRarityError
 	}
 	if 100000 <= value {
-		return nil, xerrors.New("rarityは100000以下の整数である必要があります。")
+		return nil, errors.CharacterRarityError
 	}
 	id := CharacterRarity(value)
 	return &id, nil
