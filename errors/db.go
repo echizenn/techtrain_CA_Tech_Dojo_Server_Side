@@ -11,3 +11,9 @@ var DBError = &BaseError{
 	Level:      log.Error,
 	Msg:        "dbでエラーが発生しました",
 }
+
+var OpenDBError = &BaseError{
+	StatusCode: http.StatusInternalServerError,
+	Level:      log.Error,
+	Msg:        "dbの接続に失敗しました",
+}

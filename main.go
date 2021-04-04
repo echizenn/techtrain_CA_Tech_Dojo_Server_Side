@@ -10,8 +10,11 @@ import (
 
 func main() {
 	// dbインスタンス作成
-	db := mysql.CreateSQLInstance()
+	db, err := mysql.CreateSQLInstance()
 	defer db.Close()
+	if err != nil {
+		// dbインスタンスが立ち上がらなかった時の処理を書く
+	}
 
 	gameAPI := wire.InitGameAPI(db)
 
