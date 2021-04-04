@@ -1,10 +1,10 @@
 package api
 
 import (
-	"bytes"
 	"encoding/json"
-	"io"
 	"net/http"
+
+	"golang.org/x/xerrors"
 )
 
 type createUserJson struct {
@@ -18,20 +18,16 @@ func (api *GameAPI) CreateUser(w http.ResponseWriter, r *http.Request) error {
 		return nil
 	}
 
-	body := r.Body
-	defer body.Close()
-
-	buf := new(bytes.Buffer)
-	io.Copy(buf, body)
-
 	var cuj createUserJson
-	json.Unmarshal(buf.Bytes(), &cuj)
+	body := r.Body
+	dec := json.NewDecoder(body)
+	dec.Decode(&cuj)
 
 	name := cuj.Name
 
 	token, err := api.userApplicationService.Register(name)
 	if err != nil {
-		return err
+		return xerrors.Errorf("error: %w", err)
 	}
 
 	w.Header().Set("token", *token)
@@ -61,7 +57,7 @@ func (api *GameAPI) GetUser(w http.ResponseWriter, r *http.Request) error {
 
 	name, err := api.userApplicationService.GetName(stringToken)
 	if err != nil {
-		return err
+		return xerrors.Errorf("userApplicationService.GetName func error: %w", err)
 	}
 
 	w.Header().Set("name", *name)
@@ -93,20 +89,16 @@ func (api *GameAPI) UpdateUser(w http.ResponseWriter, r *http.Request) error {
 	header := r.Header
 	token := header["X-Token"][0] // なんで大文字になる？、0って明示して大丈夫？
 
-	body := r.Body
-	defer body.Close()
-
-	buf := new(bytes.Buffer)
-	io.Copy(buf, body)
-
 	var uuj updateUserJson
-	json.Unmarshal(buf.Bytes(), &uuj)
+	body := r.Body
+	dec := json.NewDecoder(body)
+	dec.Decode(&uuj)
 
 	name := uuj.Name
 
 	err := api.userApplicationService.Update(name, token)
 	if err != nil {
-		return err
+		return xerrors.Errorf("userApplicationService.Update func error: %w", err)
 	}
 
 	return nil

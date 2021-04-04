@@ -1,10 +1,10 @@
 package api
 
 import (
-	"bytes"
 	"encoding/json"
-	"io"
 	"net/http"
+
+	"golang.org/x/xerrors"
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/application"
 )
@@ -23,14 +23,10 @@ func (api *GameAPI) GachaDraw(w http.ResponseWriter, r *http.Request) error {
 	header := r.Header
 	token := header["X-Token"][0] // なんで大文字になる？、0って明示して大丈夫？
 
-	body := r.Body
-	defer body.Close()
-
-	buf := new(bytes.Buffer)
-	io.Copy(buf, body)
-
 	var gdj gachaDrawJson
-	json.Unmarshal(buf.Bytes(), &gdj)
+	body := r.Body
+	dec := json.NewDecoder(body)
+	dec.Decode(&gdj)
 
 	times := gdj.Times
 
@@ -39,7 +35,7 @@ func (api *GameAPI) GachaDraw(w http.ResponseWriter, r *http.Request) error {
 	for i := 0; i < times; i++ {
 		gachaDrawResult, err := api.gachaApplicationService.Draw(token)
 		if err != nil {
-			return err
+			return xerrors.Errorf("gachaApplicatinService.Draw func error: %w", err)
 		}
 
 		results = append(results, *gachaDrawResult)
@@ -47,7 +43,7 @@ func (api *GameAPI) GachaDraw(w http.ResponseWriter, r *http.Request) error {
 
 	stringResults, err := json.Marshal(results)
 	if err != nil {
-		return err
+		return xerrors.Errorf("error: %w", err)
 	}
 
 	w.Header().Set("results", string(stringResults))

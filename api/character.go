@@ -3,6 +3,8 @@ package api
 import (
 	"encoding/json"
 	"net/http"
+
+	"golang.org/x/xerrors"
 )
 
 func (api *GameAPI) UserHoldCharacterList(w http.ResponseWriter, r *http.Request) error {
@@ -18,12 +20,12 @@ func (api *GameAPI) UserHoldCharacterList(w http.ResponseWriter, r *http.Request
 
 	userHoldCharacters, err := api.usersCharactersApplicationService.Hold(token)
 	if err != nil {
-		return err
+		return xerrors.Errorf("usersCharactersApplicationService.Hold func error: %w", err)
 	}
 
 	stringCharacters, err := json.Marshal(userHoldCharacters)
 	if err != nil {
-		return err
+		return xerrors.Errorf("error: %w", err)
 	}
 
 	w.Header().Set("characters", string(stringCharacters))
