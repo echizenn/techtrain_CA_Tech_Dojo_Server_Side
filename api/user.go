@@ -29,7 +29,7 @@ func (api *GameAPI) CreateUser(w http.ResponseWriter, r *http.Request) error {
 
 	token, err := api.userApplicationService.Register(name)
 	if err != nil {
-		return xerrors.Errorf("error: %w", err)
+		return xerrors.Errorf("userApplicationService.Register func error: %w", err)
 	}
 
 	w.Header().Set("token", *token)

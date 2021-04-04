@@ -45,12 +45,12 @@ func (api *GameAPI) GachaDraw(w http.ResponseWriter, r *http.Request) error {
 		results = append(results, *gachaDrawResult)
 	}
 
-	stringResults, err := json.Marshal(results)
+	marshalResults, err := json.Marshal(results)
 	if err != nil {
-		return xerrors.Errorf("error: %w", err)
+		return errors.JsonMarshalError
 	}
 
-	w.Header().Set("results", string(stringResults))
+	w.Header().Set("results", string(marshalResults))
 
 	return nil
 }

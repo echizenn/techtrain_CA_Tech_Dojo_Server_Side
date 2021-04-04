@@ -28,12 +28,12 @@ func (api *GameAPI) UserHoldCharacterList(w http.ResponseWriter, r *http.Request
 		return xerrors.Errorf("usersCharactersApplicationService.Hold func error: %w", err)
 	}
 
-	stringCharacters, err := json.Marshal(userHoldCharacters)
+	marshalCharacters, err := json.Marshal(userHoldCharacters)
 	if err != nil {
-		return xerrors.Errorf("error: %w", err)
+		return errors.JsonMarshalError
 	}
 
-	w.Header().Set("characters", string(stringCharacters))
+	w.Header().Set("characters", string(marshalCharacters))
 
 	return nil
 }
