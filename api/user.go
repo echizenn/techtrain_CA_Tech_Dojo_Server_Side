@@ -15,9 +15,7 @@ type createUserJson struct {
 
 func (api *GameAPI) CreateUser(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodPost {
-		w.WriteHeader(http.StatusMethodNotAllowed) // 405
-		w.Write([]byte("POSTだけです。"))
-		return nil
+		return errors.MethodNotAllowedError
 	}
 
 	var cuj createUserJson
@@ -49,9 +47,7 @@ func (api *GameAPI) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 
 func (api *GameAPI) GetUser(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodGet {
-		w.WriteHeader(http.StatusMethodNotAllowed) // 405
-		w.Write([]byte("GETだけです。"))
-		return nil
+		return errors.MethodNotAllowedError
 	}
 
 	header := r.Header
@@ -86,9 +82,7 @@ type updateUserJson struct {
 
 func (api *GameAPI) UpdateUser(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodPut {
-		w.WriteHeader(http.StatusMethodNotAllowed) // 405
-		w.Write([]byte("PUTだけです。"))
-		return nil
+		return errors.MethodNotAllowedError
 	}
 
 	header := r.Header

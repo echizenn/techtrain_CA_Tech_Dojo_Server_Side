@@ -10,11 +10,8 @@ import (
 )
 
 func (api *GameAPI) UserHoldCharacterList(w http.ResponseWriter, r *http.Request) error {
-	// 確認が重複になるのでいらない気もする
 	if r.Method != http.MethodGet {
-		w.WriteHeader(http.StatusMethodNotAllowed) // 405
-		w.Write([]byte("GETだけです。"))
-		return nil
+		return errors.MethodNotAllowedError
 	}
 
 	header := r.Header

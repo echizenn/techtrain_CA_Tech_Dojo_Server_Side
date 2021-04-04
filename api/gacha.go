@@ -16,9 +16,7 @@ type gachaDrawJson struct {
 
 func (api *GameAPI) GachaDraw(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodPost {
-		w.WriteHeader(http.StatusMethodNotAllowed) // 405
-		w.Write([]byte("POSTだけです。"))
-		return nil
+		return errors.MethodNotAllowedError
 	}
 
 	header := r.Header

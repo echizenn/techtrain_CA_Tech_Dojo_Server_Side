@@ -11,3 +11,9 @@ var NoTokenError = &BaseError{
 	Level:      log.Info,
 	Msg:        "tokenがありません",
 }
+
+var MethodNotAllowedError = &BaseError{
+	StatusCode: http.StatusMethodNotAllowed,
+	Level:      log.Info,
+	Msg:        "そのmethodは存在しません。",
+}
