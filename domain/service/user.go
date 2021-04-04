@@ -5,6 +5,7 @@ import (
 
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain"
 	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/domain/repository"
+	"github.com/echizenn/techtrain_CA_Tech_Dojo_Server_Side/errors"
 	"golang.org/x/xerrors"
 )
 
@@ -20,7 +21,9 @@ func (uts *UserTokenService) Create() (*domain.UserToken, error) {
 	// ランダム生成
 	u, err := uuid.NewRandom()
 	if err != nil {
-		return nil, xerrors.Errorf("error: %w", err)
+		UuidError := errors.UuidError
+		UuidError.Msg = err.Error()
+		return nil, UuidError
 	}
 	stringToken := u.String()
 	token, _ := domain.NewUserToken(stringToken)

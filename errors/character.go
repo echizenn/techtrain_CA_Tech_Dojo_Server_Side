@@ -7,19 +7,19 @@ import (
 )
 
 var CharacterIDError = &BaseError{
-	statusCode: http.StatusInternalServerError,
-	level:      log.Error,
-	msg:        "characterIDは1以上の整数である必要があります。",
+	StatusCode: http.StatusInternalServerError,
+	Level:      log.Error,
+	Msg:        "characterIDは1以上の整数である必要があります。",
 }
 
 var CharacterNameError = &BaseError{
-	statusCode: http.StatusBadRequest,
-	level:      log.Info,
-	msg:        "characterNameは1文字以上である必要があります。",
+	StatusCode: http.StatusBadRequest,
+	Level:      log.Info,
+	Msg:        "characterNameは1文字以上である必要があります。",
 }
 
 var CharacterRarityError = &BaseError{
-	statusCode: http.StatusBadRequest,
-	level:      log.Info,
-	msg:        "characterRarityは1以上100000以下の整数である必要があります。",
+	StatusCode: http.StatusBadRequest,
+	Level:      log.Info,
+	Msg:        "characterRarityは1以上100000以下の整数である必要があります。",
 }

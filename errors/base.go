@@ -7,11 +7,11 @@ import (
 )
 
 type BaseError struct {
-	statusCode int
-	level      log.Level
-	msg        string
+	StatusCode int
+	Level      log.Level
+	Msg        string
 }
 
 func (e BaseError) Error() string {
-	return fmt.Sprintf("%s: code=%d, msg=%s", e.level, e.statusCode, e.msg)
+	return fmt.Sprintf("%s: code=%d, M=%s", e.Level, e.StatusCode, e.Msg)
 }
