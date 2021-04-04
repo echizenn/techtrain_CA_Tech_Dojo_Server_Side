@@ -19,7 +19,7 @@ func NewGachaService(characterRepository repository.ICharacterRepository) GachaS
 func (gs *GachaService) Draw() (*domain.Character, error) {
 	maxID, err := gs.characterRepository.GetMaxID()
 	if err != nil {
-		return nil, xerrors.Errorf("error: %w", err)
+		return nil, xerrors.Errorf("characterRepository.GetMaxID func error: %w", err)
 	}
 	var intCharacterID int = 0
 	for intCharacterID == 0 {
@@ -28,12 +28,12 @@ func (gs *GachaService) Draw() (*domain.Character, error) {
 		intRandomCharacterID := rand.Intn(int(*maxID)) + 1
 		randomCharacterID, err := domain.NewCharacterID(intRandomCharacterID)
 		if err != nil {
-			return nil, xerrors.Errorf("error: %w", err)
+			return nil, xerrors.Errorf("NewCharacterID func error: %w", err)
 		}
-		randomCharacter, err := gs.characterRepository.BindByID(randomCharacterID)
+		randomCharacter, err := gs.characterRepository.FindByID(randomCharacterID)
 		// 長期的にはIDに欠番があってもガチャ回るようにしたい
 		if err != nil {
-			return nil, xerrors.Errorf("error: %w", err)
+			return nil, xerrors.Errorf("characterRepository.FindByID func error: %w", err)
 		}
 		rarity := randomCharacter.GetRarity()
 		intRarity := int(rarity)
@@ -42,8 +42,6 @@ func (gs *GachaService) Draw() (*domain.Character, error) {
 		// その数字が0ならそのキャラクター獲得とする
 		// 0でなければ獲得失敗でガチャを再び繰り返す
 		// このfor文は1回のガチャで10**5回とか呼ばれると思われる
-		// sql呼びすぎな気もする
-		// 計算量削減したいならあらかじめ全てのキャラクターのレア度から一発でガチャができるようにする
 		result := rand.Intn(intRarity)
 		if result == 0 {
 			intCharacterID = intRandomCharacterID
@@ -51,11 +49,11 @@ func (gs *GachaService) Draw() (*domain.Character, error) {
 	}
 	characterID, err := domain.NewCharacterID(intCharacterID)
 	if err != nil {
-		return nil, xerrors.Errorf("error: %w", err)
+		return nil, xerrors.Errorf("NewCharacterID func error: %w", err)
 	}
-	character, err := gs.characterRepository.BindByID(characterID)
+	character, err := gs.characterRepository.FindByID(characterID)
 	if err != nil {
-		return nil, xerrors.Errorf("error: %w", err)
+		return nil, xerrors.Errorf("characterRepository.FindByID func error: %w", err)
 	}
 	return character, nil
 }

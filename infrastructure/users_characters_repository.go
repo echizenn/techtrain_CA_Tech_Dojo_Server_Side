@@ -55,7 +55,7 @@ func (ucr *usersCharactersRepository) FindByUser(user *domain.User) (*[]*domain.
 		if err != nil {
 			return nil, nil, xerrors.Errorf("error: %w", err)
 		}
-		character, err := ucr.cr.BindByID(characterID)
+		character, err := ucr.cr.FindByID(characterID)
 		if err != nil {
 			return nil, nil, xerrors.Errorf("error: %w", err)
 		}

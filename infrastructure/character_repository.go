@@ -17,7 +17,7 @@ func NewCharacterRepository(db *sql.DB) repository.ICharacterRepository {
 	return &characterRepository{db}
 }
 
-func (cr *characterRepository) BindByID(characterID *domain.CharacterID) (*domain.Character, error) {
+func (cr *characterRepository) FindByID(characterID *domain.CharacterID) (*domain.Character, error) {
 	var rarity int
 	var name string
 
